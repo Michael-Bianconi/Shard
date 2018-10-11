@@ -1,17 +1,16 @@
+/**
+ * Shard
+ * @author Michael Bianconi
+ */
+
 package shard.event;
 
-/**
- * This enum holds all the event codes.
- */
 public enum EventCode {
-
-    GOTO, // NPC
+    GOTO,
     DESCRIBE,
-    INVESTIGATE,
-    ACCUSE,
-    TALK,
     TAKE,
-    GIVE,
     DROP,
-    KILL
+    INVESTIGATE,
+    TALK,
+    ERROR
 }

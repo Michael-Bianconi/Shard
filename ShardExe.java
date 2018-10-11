@@ -1,6 +1,7 @@
 import shard.*;
 import shard.event.*;
 import shard.object.*;
+import shard.user.*;
 
 public class ShardExe {
     public static void main(String args[]) {
@@ -12,6 +13,8 @@ public class ShardExe {
         Item knife = new Item("Knife", kitchen);
         Person fred = new Person("Fred Barnes", lounge);
         Person lisa = new Person("Lisa Fredrickson", kitchen);
+        Player mike = new Player("Mike", lounge);
+        InputManager inManager = new InputManager(mike);
 
         hammer.setDescription("A rusty old hammer.");
         hammer.setState(ItemState.BLOODY);
@@ -19,6 +22,7 @@ public class ShardExe {
         globe.setDescription("A globe of the world.");
         fred.setDescription("A slim-built man with round glasses.");
         lisa.setDescription("A tall, portly woman who's hair smells like vanilla.");
+        mike.setDescription("The hero of our story.");
         lounge.setDescription("A brightly lit room with several couches.");
         kitchen.setDescription("A dim kitchen with pots, pan, and many knives.");
 
