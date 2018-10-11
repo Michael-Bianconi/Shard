@@ -22,5 +22,5 @@ public interface ShardObject {
     /**
      * Location of the object (should be a Room or Person).
      */
-    public ShardObject getLocation();
+    public Owner getLocation();
 }

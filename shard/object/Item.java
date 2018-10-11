@@ -11,19 +11,25 @@ import java.util.Objects; // hashing
 
 public class Item implements ShardObject {
 
+    // MEMBER VARIABLES ========================================================
+
     private String name;
     private String description;
-    private ShardObject location;
+    private Owner location;
     private ItemState state;
 
+    // CONSTRUCTORS ============================================================
+
     /**
-     * Most basic constructor. Initializes with NORMAL state.
+     * Most basic constructor. Initializes with NORMAL state. Automatically adds
+     * the Item to the location's 
      * @param name Name of the item.
      * @param location Location of the item (a Room or Person).
      */
-    public Item(String name, ShardObject location) {
+    public Item(String name, Owner location) {
         this.name = name;
         this.location = location;
+        this.location.addObject(this);
         this.state = ItemState.NORMAL;
         this.description = this.state.name().toLowerCase() + " " + this.name;
     }
@@ -31,7 +37,7 @@ public class Item implements ShardObject {
     // ACCESSORS ===============================================================
     public String getName() { return this.name; }
     public ItemState getItemState() { return this.state; }
-    public ShardObject getLocation() { return this.location; }
+    public Owner getLocation() { return this.location; }
     public String getRawDescription() { return this.description; }
     public String getDescription() {
         String ret = this.description;
@@ -45,11 +51,17 @@ public class Item implements ShardObject {
 
     public void setDescription(String d) { this.description = d; }
     public void setState(ItemState s) { this.state = s; }
-    public void setLocation(ShardObject o) { this.location = o; }
+    public void setLocation(Owner o) {
+        this.location.removeObject(this);
+        this.location = o;
+        this.location.addObject(this);
+    }
 
     // OVERRIDE METHODS ========================================================
     @Override
-    public String toString() { return "a " + state.name() + " " + name; }
+    public String toString() {
+        return state.name().toLowerCase() + " " + name;
+    }
 
     @Override
     public boolean equals(Object o) {
