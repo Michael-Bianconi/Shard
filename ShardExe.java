@@ -2,18 +2,30 @@ import shard.*;
 import shard.event.*;
 import shard.object.*;
 import shard.user.*;
+import java.util.Scanner;
 
+
+/**
+ * Note:
+ *
+ * Be careful with naming conventions. If you name two non-Item ShardObjects
+ * the same thing, there may be some funkiness.
+ *
+ * TODO: Clean up the input manager
+ */
 public class ShardExe {
     public static void main(String args[]) {
+        Room nullroom = Room.NullRoom();
         Room lounge = new Room("Lounge");
         Room kitchen = new Room("Kitchen");
         Item hammer = new Item("Hammer", lounge);
         Item globe = new Item("Globe", lounge);
         Item pan = new Item("Pan", kitchen);
         Item knife = new Item("Knife", kitchen);
-        Person fred = new Person("Fred Barnes", lounge);
+        Person fred = new Person("Fred Barnes", nullroom);
         Person lisa = new Person("Lisa Fredrickson", kitchen);
         Player mike = new Player("Mike", lounge);
+        Item rope = new Item("Rope", mike);
         InputManager inManager = new InputManager(mike);
 
         hammer.setDescription("A rusty old hammer.");
@@ -26,40 +38,20 @@ public class ShardExe {
         lounge.setDescription("A brightly lit room with several couches.");
         kitchen.setDescription("A dim kitchen with pots, pan, and many knives.");
 
-
         lounge.connectRoom(kitchen);
         kitchen.connectRoom(lounge);
 
-        System.out.println(lounge.getName());
-        System.out.println(lounge.getDescription());
-        for (ShardObject o : lounge.getObjects()) {
-            System.out.println(o);
-        }
+        while(true) {
+            Scanner s = new Scanner(System.in);
+            String command = s.nextLine();
 
-        System.out.println("");
-
-        System.out.println(kitchen.getName());
-        System.out.println(kitchen.getDescription());
-        for (ShardObject o : kitchen.getObjects()) {
-            System.out.println(o);
-        }
-
-        knife.setLocation(lisa);
-
-        System.out.println("");
-
-        System.out.println(kitchen.getName());
-        System.out.println(kitchen.getDescription());
-        for (ShardObject o : kitchen.getObjects()) {
-            System.out.println(o);
-        }
-
-        System.out.println("");
-
-        System.out.println(lisa.getName());
-        System.out.println(lisa.getDescription());
-        for (ShardObject o : lisa.getObjects()) {
-            System.out.println(o);
+            try {
+                System.out.println(inManager.parse(command));
+            } catch (CommandNotFoundException e) {
+                System.out.println("Command not found!");
+            } catch (ArgumentNotFoundException e) {
+                System.out.println("Arguments not found!");
+            }
         }
     }
 }

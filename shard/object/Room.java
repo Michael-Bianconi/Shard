@@ -14,7 +14,7 @@ package shard.object;
 import java.util.ArrayList;
 
 public class Room implements ShardObject, Owner {
-    
+
     private String name;
     private String description;
     private ArrayList<ShardObject> objects;
@@ -27,6 +27,17 @@ public class Room implements ShardObject, Owner {
         this.description = name;
         this.objects = new ArrayList<ShardObject>();
         this.connectedRooms = new ArrayList<Room>();
+    }
+
+    /**
+     * Constructor for NullRooms. NullRooms are just like normal rooms (and
+     * can be used as such), but are meant to be used as simple storage Owners.
+     * @return A Null Room.
+     */
+    public static Room NullRoom() {
+        Room nullroom = new Room("NULLROOM");
+        nullroom.setDescription("A room that doesn't exist.");
+        return nullroom;
     }
 
     // ACCESSORS ===============================================================

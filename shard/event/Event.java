@@ -20,6 +20,10 @@ public class Event {
         this.objects = objects;
     }
 
+    public static Event ErrorEvent() {
+        return new Event(EventCode.ERROR, new ArrayList<ShardObject>());
+    }
+
     // ACCESSORS ===============================================================
 
     public EventCode getEventCode() { return this.code; }
@@ -27,7 +31,16 @@ public class Event {
 
     // OVERRIDDEN METHODS ======================================================
     @Override
-    public String toString() { return this.code.name(); }
+    public String toString() {
+
+        String ret = this.code.name() + " ";
+
+        for (ShardObject o : this.objects) {
+            ret += o.toString() + " ";
+        }
+
+        return ret;
+    }
 
     @Override
     public int hashCode() { return Objects.hash(this.code, this.objects); }

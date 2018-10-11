@@ -60,7 +60,8 @@ public class Item implements ShardObject {
     // OVERRIDE METHODS ========================================================
     @Override
     public String toString() {
-        return state.name().toLowerCase() + " " + name;
+        if (state == ItemState.NORMAL) { return name.toLowerCase(); }
+        else { return state.name().toLowerCase() + " " + name.toLowerCase(); }
     }
 
     @Override

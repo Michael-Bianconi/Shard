@@ -13,12 +13,12 @@ public class Player implements ShardObject, Owner {
 
     private String name;
     private String description;
-    private Owner location;
+    private Room location;
     private ArrayList<ShardObject> inventory;
 
     // CONSTRUCTOR =============================================================
 
-    public Player(String name, Owner location) {
+    public Player(String name, Room location) {
         this.name = name;
         this.description = name;
         this.location = location;
@@ -30,14 +30,14 @@ public class Player implements ShardObject, Owner {
 
     public String getName() { return this.name; }
     public String getDescription() { return this.description; }
-    public Owner getLocation() { return this.location; }
+    public Room getLocation() { return this.location; }
     public ArrayList<ShardObject> getObjects() { return this.inventory; }
 
     public void setDescription(String d) { this.description = d; }
     public void addObject(ShardObject o) { this.inventory.add(o); }
     public void removeObject(ShardObject o) { this.inventory.remove(o); }
     public boolean hasObject(ShardObject o) { return this.inventory.contains(o); }
-    public void setLocation(Owner l) {
+    public void setLocation(Room l) {
         this.location.removeObject(this);
         this.location = l;
         this.location.addObject(this);

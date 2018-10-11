@@ -6,11 +6,11 @@
 package shard.event;
 
 public enum EventCode {
-    GOTO,
-    DESCRIBE,
-    TAKE,
-    DROP,
-    INVESTIGATE,
-    TALK,
-    ERROR
+    GOTO,           // GOTO [Room]
+    DESCRIBE,       // DESCRIBE [ShardObject]
+    TAKE,           // TAKE [Item]
+    DROP,           // DROP [Item]
+    INVESTIGATE,    // INVESTIGATE [Room]
+    TALK,           // TALK [Person]
+    ERROR           // ERROR
 }
