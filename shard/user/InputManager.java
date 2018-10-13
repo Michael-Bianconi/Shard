@@ -12,7 +12,7 @@
  *
  * Valid:
  *
- *      goto kitchen
+ *      ENTER kitchen
  *      drop rope
  *      talk fred barnes
  *
@@ -80,7 +80,7 @@ public class InputManager {
             switch (c) {
 
                 // Look for connected rooms
-                case GOTO: // drop down to INVESTIGATE
+                case ENTER: // drop down to INVESTIGATE
                 case INVESTIGATE: objectList = roomParse(argument);
                     break;
 
@@ -139,9 +139,8 @@ public class InputManager {
         for (ShardObject o : objs) {
 
             // if the object is of the correct type
-            if (filter.equals(o.getClass())) {
+            if (filter.isInstance(o)) {
 
-                // check if their names are the same
                 if (name.toUpperCase().equals(o.toString().toUpperCase())) {
                     parsedArgs.add(o);
                     return parsedArgs;
@@ -198,6 +197,7 @@ public class InputManager {
         list.addAll(player.getObjects());
 
         if (player.getLocation() instanceof Room) {
+            System.out.println("true");
             Room location = (Room) player.getLocation();
             list.add(location);
             list.addAll(location.getObjects());
@@ -205,7 +205,7 @@ public class InputManager {
         }
 
         list.add(player);
-
+        
         return objectParse(arg, ShardObject.class, list);
     }
 }

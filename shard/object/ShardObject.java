@@ -74,7 +74,7 @@ public class ShardObject {
      * @param owner Owner to set.
      */
     public void setLocation(Owner owner) {
-        if (this.location != null && this.location.hasObject(this)) {
+        if (this.location != null) {
             this.location.removeObject(this);
         }
         this.location = owner;

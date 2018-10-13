@@ -3,6 +3,7 @@ import shard.event.*;
 import shard.object.*;
 import shard.user.*;
 import java.util.Scanner;
+import java.util.ArrayList;
 
 
 /**
@@ -19,6 +20,9 @@ import java.util.Scanner;
  * compare their inventories. Comparing inventories involves checking each
  * Item they're holding. To compare Items, I have to check if they're in the
  * same location.
+ *
+ * TODO: clean up the InputManager and EventManager. Better to do it now than
+ * later.
  */
 public class ShardExe {
 
@@ -59,7 +63,7 @@ public class ShardExe {
         Item bedsheet = new Item("bedsheet", masterBedroom);
 
         // creating people
-        Guest fred = new Guest("Fred Barnes", lounge);
+        Guest fred = new Guest("Fred Barnes", "a large man", lounge);
         Guest lisa = new Guest("Lisa Fredrickson", kitchen);
         Guest mark = new Guest("Mark Twain", lounge);
         Guest luke = new Guest("Luke Vanmont", masterBedroom);
@@ -73,11 +77,16 @@ public class ShardExe {
             String command = s.nextLine();
 
             try {
-                System.out.println(inManager.parse(command));
+                Event e = inManager.parse(command);
+                EventManager.execute(e);
             } catch (CommandNotFoundException e) {
-                System.out.println("Command not found!");
+                System.out.println(e);
             } catch (ArgumentNotFoundException e) {
-                System.out.println("Arguments not found!");
+                System.out.println(e);
+            } catch (MissingArgumentException e) {
+                System.out.println(e);
+            } catch (UnknownCommandException e) {
+                System.out.println(e);
             }
         }
     }
