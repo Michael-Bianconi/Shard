@@ -2,6 +2,11 @@ package shard.user;
 import shard.event.Event;
 import shard.event.EventCode;
 import shard.object.Player;
+import shard.object.ShardObject;
+import shard.object.Room;
+import shard.object.Item;
+import shard.object.Owner;
+import shard.object.Guest;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -15,43 +20,76 @@ import java.util.HashMap;
  */
 public class InputManager {
 
-    private static final Map<String, EventCode> codeMap;
+    /** All possible commands, mapped to the corresponding EventCodes. */
+    private static final Map<String, EventCode> commandMap;
+
+    /** Which kind of ShardObject does an EventCode care about? */
+    private static final Map<EventCode, Class> filterMap;
+
+    /** How many arguments can be used with a command? */
+    private static final Map<EventCode, int[]> argCountMap;
+
     static {
-        codeMap = new HashMap<String, EventCode>();
+        commandMap = new HashMap<String, EventCode>();
+        commandMap.put("ENTER",         EventCode.ENTER);
+        commandMap.put("GOTO",          EventCode.ENTER);
+        commandMap.put("GO TO",         EventCode.ENTER);
+        commandMap.put("DESCRIBE",      EventCode.DESCRIBE);
+        commandMap.put("HELP",          EventCode.DESCRIBE);
+        commandMap.put("INFORMATION",   EventCode.DESCRIBE);
+        commandMap.put("INFO",          EventCode.DESCRIBE);
+        commandMap.put("TAKE",          EventCode.TAKE);
+        commandMap.put("PICKUP",        EventCode.TAKE);
+        commandMap.put("PICK UP",       EventCode.TAKE);
+        commandMap.put("DROP",          EventCode.DROP);
+        commandMap.put("LEAVE",         EventCode.DROP);
+        commandMap.put("INVESTIGATE",   EventCode.INVESTIGATE);
+        commandMap.put("LOOK AROUND",   EventCode.INVESTIGATE);
+        commandMap.put("TALK",          EventCode.TALK);
+        commandMap.put("TALK TO",       EventCode.TALK);
+        commandMap.put("TALK WITH",     EventCode.TALK);
+        commandMap.put("WHOAMI",        EventCode.WHOAMI);
+        commandMap.put("WHOAMI?",       EventCode.WHOAMI);
+        commandMap.put("WHO AM I",      EventCode.WHOAMI);
+        commandMap.put("WHO AM I?",     EventCode.WHOAMI);
+        commandMap.put("WHEREAMI",      EventCode.WHEREAMI);
+        commandMap.put("WHEREAMI?",     EventCode.WHEREAMI);
+        commandMap.put("WHERE AM I",    EventCode.WHEREAMI);
+        commandMap.put("WHERE AM I?",   EventCode.WHEREAMI);
 
-        codeMap.put("ENTER",       EventCode.ENTER);
-        codeMap.put("GOTO",        EventCode.ENTER);
-        codeMap.put("GO TO",       EventCode.ENTER);
+        filterMap = new HashMap<EventCode, Class>();
+        filterMap.put(EventCode.ENTER,          Room.class);
+        filterMap.put(EventCode.DESCRIBE,       ShardObject.class);
+        filterMap.put(EventCode.TAKE,           Item.class);
+        filterMap.put(EventCode.DROP,           Item.class);
+        filterMap.put(EventCode.INVESTIGATE,    Room.class);
+        filterMap.put(EventCode.TALK,           Guest.class);
+        filterMap.put(EventCode.WHOAMI,         Player.class);
+        filterMap.put(EventCode.WHEREAMI,       Owner.class);
 
-        codeMap.put("DESCRIBE",    EventCode.DESCRIBE);
-        codeMap.put("HELP",        EventCode.DESCRIBE);
-        codeMap.put("INFORMATION", EventCode.DESCRIBE);
-        codeMap.put("INFO",        EventCode.DESCRIBE);
-
-        codeMap.put("TAKE",        EventCode.TAKE);
-        codeMap.put("PICKUP",      EventCode.TAKE);
-        codeMap.put("PICK UP",     EventCode.TAKE);
-
-        codeMap.put("DROP",        EventCode.DROP);
-        codeMap.put("LEAVE",       EventCode.DROP);
-
-        codeMap.put("INVESTIGATE", EventCode.INVESTIGATE);
-        codeMap.put("LOOK AROUND", EventCode.INVESTIGATE);
-
-        codeMap.put("TALK",        EventCode.TALK);
-        codeMap.put("TALK TO",     EventCode.TALK);
-        codeMap.put("TALK WITH",   EventCode.TALK);
+        argCountMap = new HashMap<EventCode, int[]>();
+        argCountMap.put(EventCode.ENTER,          new int[] {1});
+        argCountMap.put(EventCode.DESCRIBE,       new int[] {1});
+        argCountMap.put(EventCode.TAKE,           new int[] {1});
+        argCountMap.put(EventCode.DROP,           new int[] {1});
+        argCountMap.put(EventCode.INVESTIGATE,    new int[] {0, 1});
+        argCountMap.put(EventCode.TALK,           new int[] {1});
+        argCountMap.put(EventCode.WHOAMI,         new int[] {0});
+        argCountMap.put(EventCode.WHEREAMI,       new int[] {0});
     }
 
+    private InputManager() {}
+
     /**
-     * This method takes user input (e.g. "describe lounge"),
-     * and turns it into an Event (e.g. DESCRIBE PLAYER LOUNGE).
-     * Only ShardObjects relevant to the player are considered.
+     * When parsing input arguments, we have to choose from whichever
+     * items are available to the player, no more no less. To do that,
+     * we use the various compileCandidateList() methods.
      *
      * @param p Player object.
      * @param input String input.
      * @return Shard-readable Event.
      * @exception InvalidInputException
+     * @see parseCommand
      */
     public static String parse(Player p, String input)
         throws InvalidInputException {
