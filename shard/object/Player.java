@@ -6,58 +6,46 @@
 package shard.object;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
-public class Player implements ShardObject, Owner {
+public class Player extends ShardObject implements Owner {
 
     // MEMBER VARIABLES ========================================================
 
-    private String name;
-    private String description;
-    private Room location;
     private ArrayList<ShardObject> inventory;
 
     // CONSTRUCTOR =============================================================
 
-    public Player(String name, Room location) {
-        this.name = name;
-        this.description = name;
-        this.location = location;
-        this.location.addObject(this);
+    public Player(String name) {
+        this(name, name, new Room());
+    }
+
+    public Player(String name, String description) {
+        this(name, description, new Room());
+    }
+
+    public Player(String name, Owner location) {
+        this(name, name, location);
+    }
+
+    /**
+     * Main constructor for Person.
+     * If description is omitted, replace it with name.
+     * If location is omitted, use an empty Room.;
+     * @param name Name of the person (e.g. Tom Hanks).
+     * @param description Description of the person.
+     * @param location Location of the person.
+     */
+    public Player(String name, String description, Owner location) {
+        super(name, description, location);
         this.inventory = new ArrayList<ShardObject>();
     }
 
     // ACCESSORS ===============================================================
 
-    public String getName() { return this.name; }
-    public String getDescription() { return this.description; }
-    public Room getLocation() { return this.location; }
-    public ArrayList<ShardObject> getObjects() { return this.inventory; }
 
-    public void setDescription(String d) { this.description = d; }
-    public void addObject(ShardObject o) { this.inventory.add(o); }
-    public void removeObject(ShardObject o) { this.inventory.remove(o); }
-    public boolean hasObject(ShardObject o) { return this.inventory.contains(o); }
-    public void setLocation(Room l) {
-        this.location.removeObject(this);
-        this.location = l;
-        this.location.addObject(this);
-    }
-
-    // OVERRIDEN METHODS =======================================================
-
-    @Override
-    public String toString() { return this.name; }
-
-    @Override
-    public int hashCode() { return this.name.hashCode(); }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) { return true; }
-        if (!(o instanceof Player)) { return false; }
-
-        Player p = (Player) o;
-
-        return this.name.equals(p.name);
-    }
+    public ArrayList<ShardObject> getObjects() { return inventory; }
+    public void addObject(ShardObject o) { inventory.add(o); }
+    public void removeObject(ShardObject o) { inventory.remove(o); }
+    public boolean hasObject(ShardObject o) { return inventory.contains(o); }
 }

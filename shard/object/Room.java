@@ -13,63 +13,57 @@ package shard.object;
 
 import java.util.ArrayList;
 
-public class Room implements ShardObject, Owner {
+public class Room extends ShardObject implements Owner {
 
-    private String name;
-    private String description;
     private ArrayList<ShardObject> objects;
     private ArrayList<Room> connectedRooms;
 
     // CONSTRUCTORS ============================================================
-
+    
     public Room(String name) {
-        this.name = name;
-        this.description = name;
+        this(name, name);
+    }
+
+    /**
+     * Main constructor for Room.
+     * If description is omitted, replace it with name.
+     * @param name Name of the room (e.g. "lounge").
+     * @param description Description of the room.
+     */
+    public Room(String name, String description) {
+        super(name, description, null);
         this.objects = new ArrayList<ShardObject>();
         this.connectedRooms = new ArrayList<Room>();
     }
 
     /**
-     * Constructor for NullRooms. NullRooms are just like normal rooms (and
+     * Constructor for empty Rooms. Empty Rooms are just like normal rooms (and
      * can be used as such), but are meant to be used as simple storage Owners.
      * @return A Null Room.
      */
-    public static Room NullRoom() {
-        Room nullroom = new Room("NULLROOM");
-        nullroom.setDescription("A room that doesn't exist.");
-        return nullroom;
+    public Room() {
+        this("room", "a non-descript room");
     }
 
     // ACCESSORS ===============================================================
-    public String getName() { return this.name; }
-    public String getDescription() { return this.description; }
-    public Owner getLocation() { return (Owner) this; }
     public ArrayList<ShardObject> getObjects() { return this.objects; }
     public ArrayList<Room> getConnectedRooms() { return this.connectedRooms; }
     
-    public void setDescription(String d) { this.description = d; }
-    public void addObject(ShardObject o) { this.objects.add(o); }
-    public void removeObject(ShardObject o) { this.objects.remove(o); }
-    public boolean hasObject(ShardObject o) { return this.objects.contains(o); }
-    public void connectRoom(Room r) { this.connectedRooms.add(r); }
-
-    // OVERRIDDEN METHODS ======================================================
-    @Override
-    public String toString() { return this.name; }
+    public void addObject(ShardObject o) { objects.add(o); }
+    public void removeObject(ShardObject o) { objects.remove(o); }
+    public boolean hasObject(ShardObject o) { return objects.contains(o); }
+    public void connectRoom(Room r) { connectedRooms.add(r); }
 
     /**
-     * Check by comparing names.
+     * Use this method to connect both the rooms together and make a
+     * bidirectional connection.
+     *
+     * Using connectRoom(Room) makes a unidirectional connection (useful for
+     * secret passages), although calling connectRoom() on both r1 and r2
+     * achieves the same effect as this method.
      */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) { return true; }
-        if (!(o instanceof Room)) { return false; }
-
-        Room r = (Room) o;
-
-        return this.name.equals(r.name);
+    public static void connectRooms(Room r1, Room r2) {
+        r1.connectRoom(r2);
+        r2.connectRoom(r1);
     }
-
-    @Override
-    public int hashCode() { return this.name.hashCode(); }
 }

@@ -9,5 +9,7 @@ package shard.object;
 public enum ItemState {
     NORMAL,
     DAMAGED,
-    BLOODY
+    BLOODY,
+    TORN,
+    DEAD
 }
