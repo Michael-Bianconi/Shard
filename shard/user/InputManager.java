@@ -57,6 +57,7 @@ public class InputManager {
         commandMap.put("WHEREAMI?",     Command.WHEREAMI);
         commandMap.put("WHERE AM I",    Command.WHEREAMI);
         commandMap.put("WHERE AM I?",   Command.WHEREAMI);
+        commandMap.put("INVENTORY",     Command.INVENTORY);
 
         ignoredKeywords = new ArrayList<String>();
         ignoredKeywords.add("THE");
@@ -69,14 +70,14 @@ public class InputManager {
     private InputManager() {}
 
     /**
-     * Parses user input into an UserEvent. If the input is unrecognized or
+     * Parses user input into an Event. If the input is unrecognized or
      * ambiguous, throws an InvalidInputException.
      * @param player Player object.
      * @param input String input.
-     * @return Corresponding UserEvent.
+     * @return Corresponding Event.
      * @exception InvalidInputException
      */
-    public static UserEvent parse(Player player, String input)
+    public static Event parse(Player player, String input)
         throws InvalidInputException {
 
         // input arguments are matched with something in this list.
@@ -103,7 +104,7 @@ public class InputManager {
         // check for 0-arg commands
         if (command.getNumArguments() == 0) {
             if (input.length() == 0) {
-                return new UserEvent(command);
+                return new Event(command);
             }
 
             // got arguments in a 0-arg command
@@ -120,7 +121,7 @@ public class InputManager {
         else {
             candidateList = command.buildCandidateList(player);
             ShardObject object = matchArgument(input, candidateList);
-            return new UserEvent(command, object);
+            return new Event(command, object);
         }
     }
 

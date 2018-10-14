@@ -21,6 +21,12 @@ public enum Command {
 
         @Override
         public int getNumArguments() { return 1; }
+
+        @Override
+        public void execute(ShardObject executor, ShardObject location) {
+
+            executor.setLocation((Owner) location);
+        }
     },
 
     DESCRIBE {
@@ -41,6 +47,11 @@ public enum Command {
         @Override
         public int getNumArguments() { return 1; }
 
+        @Override
+        public void execute(ShardObject executor, ShardObject item) {
+            System.out.println(item.getDescription());
+        }
+
     },  
 
     TAKE {
@@ -53,6 +64,11 @@ public enum Command {
 
         @Override
         public int getNumArguments() { return 1; }
+
+        @Override
+        public void execute(ShardObject executor, ShardObject item) {
+            item.setLocation((Owner) executor);
+        }
     },
 
     DROP {
@@ -64,6 +80,11 @@ public enum Command {
 
         @Override
         public int getNumArguments() { return 1; }
+
+        @Override
+        public void execute(ShardObject executor, ShardObject item) {
+            item.setLocation(executor.getLocation());
+        }
 
     },
 
@@ -80,10 +101,48 @@ public enum Command {
         public int getNumArguments() { return 1; }
     },
 
-    INVESTIGATE,    // INVESTIGATE [Room]
-    WHOAMI,         // WHOAMI
-    WHEREAMI,       // WHEREAMI
-    ERROR;       // ERROR
+    INVESTIGATE {
+        @Override
+        public void execute(ShardObject executor, ShardObject item) {
+
+            ArrayList<ShardObject> objs = executor.getLocation().getObjects();
+            for (ShardObject o : objs) {
+                System.out.println(o.getName());
+            }
+        }
+
+    }, 
+
+    WHOAMI {
+        @Override
+        public void execute(ShardObject executor, ShardObject item) {
+            System.out.println(executor.getName());
+        }
+    },
+
+    WHEREAMI {
+
+        @Override
+        public void execute(ShardObject executor, ShardObject item) {
+            ShardObject o = (ShardObject) executor.getLocation();
+            System.out.println(o.getName());
+        }
+    },
+
+    INVENTORY {
+
+        @Override
+        public void execute(ShardObject executor, ShardObject item) {
+
+            Owner owner = (Owner) executor;
+
+            for (ShardObject o : owner.getObjects()) {
+                System.out.println(o.getName());
+            }
+        }
+    },
+
+    ERROR;
 
     /**
      * Given a player, create an ArrayList of all possible candidates that
@@ -103,6 +162,15 @@ public enum Command {
      * @return Returns the number of arguments this command takes.
      */
     public int getNumArguments() { return 0; }
+
+
+    /**
+     * Given an executor and an argument, execute the command. If not
+     * overridden, do nothing.
+     * @param executor ShardObject that is initiating this event.
+     * @param item Argument to execute the command with.
+     */
+    public void execute(ShardObject executor, ShardObject item) {    }
 
 
     /**
