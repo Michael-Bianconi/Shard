@@ -39,7 +39,6 @@ public class Room extends ShardObject implements Owner {
     /**
      * Constructor for empty Rooms. Empty Rooms are just like normal rooms (and
      * can be used as such), but are meant to be used as simple storage Owners.
-     * @return A Null Room.
      */
     public Room() {
         this("room", "a non-descript room");

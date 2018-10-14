@@ -18,35 +18,39 @@ import java.util.Objects;
 public class Event {
 
     private EventCode code;
-    private ShardObject executor;
     private ArrayList<ShardObject> objects;
 
     // CONSTRUCTOR =============================================================
 
+    public Event(EventCode code) {
+        this(code, new ArrayList<ShardObject>());
+    }
+
+    public Event(EventCode code, ShardObject object) {
+        this(code);
+        this.objects.add(object);
+    }
+
     public Event(EventCode code,
-                 ShardObject executor,
                  ArrayList<ShardObject> objects) {
         this.code = code;
-        this.executor = executor;
         this.objects = objects;
     }
 
     public static Event ErrorEvent() {
-        return new Event(EventCode.ERROR, null, new ArrayList<ShardObject>());
+        return new Event(EventCode.ERROR);
     }
 
     // ACCESSORS ===============================================================
 
     public EventCode getEventCode() { return this.code; }
-    public ShardObject getExecutor() { return this.executor; }
     public ArrayList<ShardObject> getObjects() { return this.objects; }
 
     // OVERRIDDEN METHODS ======================================================
     @Override
     public String toString() {
 
-        String str = this.code.name() + " "
-                   + this.executor.toString().toUpperCase() + " ";
+        String str = this.code.name() + " ";
 
         for (ShardObject o : this.objects) {
             str += o.toString().toUpperCase() + " ";
@@ -57,7 +61,7 @@ public class Event {
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.code, this.executor, this.objects);
+        return Objects.hash(this.code, this.objects);
     }
 
     @Override
@@ -68,7 +72,6 @@ public class Event {
         Event e = (Event) o;
 
         return this.code == e.code
-            && this.executor.equals(e.executor)
             && this.objects.equals(e.objects);
     }
 }

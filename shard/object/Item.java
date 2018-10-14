@@ -34,6 +34,10 @@ public class Item extends ShardObject {
         this(name, description, null, state);
     }
 
+    public Item(String name, String description, Owner location) {
+        this(name, description, location, ItemState.NORMAL);
+    }
+
     public Item(String name, Owner location, ItemState state) {
         this(name, name, location, state);
     }
