@@ -19,10 +19,11 @@ package shard.object;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Guest extends ShardObject implements Owner {
+public class Guest extends ShardObject implements Owner, Memory {
 
     // MEMBER VARIABLES ========================================================
     private ArrayList<ShardObject> inventory;
+    private ArrayList<String> memories;
 
 
     // CONSTRUCTOR =============================================================
@@ -50,6 +51,7 @@ public class Guest extends ShardObject implements Owner {
     public Guest(String name, String description, Owner location) {
         super(name, description, location);
         this.inventory = new ArrayList<ShardObject>();
+        this.memories = new ArrayList<String>();
     }
 
     // ACCESSORS ===============================================================
@@ -58,4 +60,11 @@ public class Guest extends ShardObject implements Owner {
     public void addObject(ShardObject o) { inventory.add(o); }
     public void removeObject(ShardObject o) { inventory.remove(o); }
     public boolean hasObject(ShardObject o) { return inventory.contains(o); }
+
+    public ArrayList<String> getMemories() { return memories; }
+    public void addMemory(String m) { memories.add(m); }
+    public String getLatestMemory() {
+        if (memories.size() == 0) { return "I can't remember anything"; }
+        else { return memories.get(memories.size() - 1); }
+    }
 }

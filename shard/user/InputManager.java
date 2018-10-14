@@ -104,7 +104,7 @@ public class InputManager {
         // check for 0-arg commands
         if (command.getNumArguments() == 0) {
             if (input.length() == 0) {
-                return new Event(command);
+                return new Event(command, player);
             }
 
             // got arguments in a 0-arg command
@@ -121,7 +121,7 @@ public class InputManager {
         else {
             candidateList = command.buildCandidateList(player);
             ShardObject object = matchArgument(input, candidateList);
-            return new Event(command, object);
+            return new Event(command, player, object);
         }
     }
 
