@@ -1,12 +1,5 @@
 package shard.user;
-import shard.event.Event;
-import shard.event.EventCode;
-import shard.object.Player;
-import shard.object.ShardObject;
-import shard.object.Room;
-import shard.object.Item;
-import shard.object.Owner;
-import shard.object.Guest;
+import shard.object.*;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Arrays;
@@ -29,14 +22,8 @@ public class InputManager {
     // no keywords, or had keywords not included in the candidate name
     private static final int NO_MATCH = 0;
 
-    /** All possible commands, mapped to the corresponding EventCodes. */
-    private static final Map<String, EventCode> commandMap;
-
-    /** Which kind of ShardObject does an EventCode care about? */
-    private static final Map<EventCode, Class> filterMap;
-
-    /** How many arguments can be used with a command? */
-    private static final Map<EventCode, Integer> argCountMap;
+    /** All possible commands, mapped to the corresponding Commands. */
+    private static final Map<String, Command> commandMap;
 
     /** When comparing keywords, if these keywords are used in the argument
         but don't match any keywords in the candidate, ignore them it's fine.
@@ -44,71 +31,52 @@ public class InputManager {
     private static final ArrayList<String> ignoredKeywords;
 
     static {
-        commandMap = new HashMap<String, EventCode>();
-        commandMap.put("ENTER",         EventCode.ENTER);
-        commandMap.put("GOTO",          EventCode.ENTER);
-        commandMap.put("GO TO",         EventCode.ENTER);
-        commandMap.put("DESCRIBE",      EventCode.DESCRIBE);
-        commandMap.put("HELP",          EventCode.DESCRIBE);
-        commandMap.put("INFORMATION",   EventCode.DESCRIBE);
-        commandMap.put("INFO",          EventCode.DESCRIBE);
-        commandMap.put("TAKE",          EventCode.TAKE);
-        commandMap.put("PICKUP",        EventCode.TAKE);
-        commandMap.put("PICK UP",       EventCode.TAKE);
-        commandMap.put("DROP",          EventCode.DROP);
-        commandMap.put("LEAVE",         EventCode.DROP);
-        commandMap.put("INVESTIGATE",   EventCode.INVESTIGATE);
-        commandMap.put("LOOK AROUND",   EventCode.INVESTIGATE);
-        commandMap.put("TALK",          EventCode.TALK);
-        commandMap.put("TALK TO",       EventCode.TALK);
-        commandMap.put("TALK WITH",     EventCode.TALK);
-        commandMap.put("WHOAMI",        EventCode.WHOAMI);
-        commandMap.put("WHOAMI?",       EventCode.WHOAMI);
-        commandMap.put("WHO AM I",      EventCode.WHOAMI);
-        commandMap.put("WHO AM I?",     EventCode.WHOAMI);
-        commandMap.put("WHEREAMI",      EventCode.WHEREAMI);
-        commandMap.put("WHEREAMI?",     EventCode.WHEREAMI);
-        commandMap.put("WHERE AM I",    EventCode.WHEREAMI);
-        commandMap.put("WHERE AM I?",   EventCode.WHEREAMI);
-
-        filterMap = new HashMap<EventCode, Class>();
-        filterMap.put(EventCode.ENTER,          Room.class);
-        filterMap.put(EventCode.DESCRIBE,       ShardObject.class);
-        filterMap.put(EventCode.TAKE,           Item.class);
-        filterMap.put(EventCode.DROP,           Item.class);
-        filterMap.put(EventCode.INVESTIGATE,    Room.class);
-        filterMap.put(EventCode.TALK,           Guest.class);
-        filterMap.put(EventCode.WHOAMI,         Player.class);
-        filterMap.put(EventCode.WHEREAMI,       Owner.class);
-
-        argCountMap = new HashMap<EventCode, Integer>();
-        argCountMap.put(EventCode.ENTER,          1);
-        argCountMap.put(EventCode.DESCRIBE,       1);
-        argCountMap.put(EventCode.TAKE,           1);
-        argCountMap.put(EventCode.DROP,           1);
-        argCountMap.put(EventCode.INVESTIGATE,    0);
-        argCountMap.put(EventCode.TALK,           1);
-        argCountMap.put(EventCode.WHOAMI,         0);
-        argCountMap.put(EventCode.WHEREAMI,       0);
+        commandMap = new HashMap<String, Command>();
+        commandMap.put("ENTER",         Command.ENTER);
+        commandMap.put("GOTO",          Command.ENTER);
+        commandMap.put("GO TO",         Command.ENTER);
+        commandMap.put("DESCRIBE",      Command.DESCRIBE);
+        commandMap.put("HELP",          Command.DESCRIBE);
+        commandMap.put("INFORMATION",   Command.DESCRIBE);
+        commandMap.put("INFO",          Command.DESCRIBE);
+        commandMap.put("TAKE",          Command.TAKE);
+        commandMap.put("PICKUP",        Command.TAKE);
+        commandMap.put("PICK UP",       Command.TAKE);
+        commandMap.put("DROP",          Command.DROP);
+        commandMap.put("LEAVE",         Command.DROP);
+        commandMap.put("INVESTIGATE",   Command.INVESTIGATE);
+        commandMap.put("LOOK AROUND",   Command.INVESTIGATE);
+        commandMap.put("TALK",          Command.TALK);
+        commandMap.put("TALK TO",       Command.TALK);
+        commandMap.put("TALK WITH",     Command.TALK);
+        commandMap.put("WHOAMI",        Command.WHOAMI);
+        commandMap.put("WHOAMI?",       Command.WHOAMI);
+        commandMap.put("WHO AM I",      Command.WHOAMI);
+        commandMap.put("WHO AM I?",     Command.WHOAMI);
+        commandMap.put("WHEREAMI",      Command.WHEREAMI);
+        commandMap.put("WHEREAMI?",     Command.WHEREAMI);
+        commandMap.put("WHERE AM I",    Command.WHEREAMI);
+        commandMap.put("WHERE AM I?",   Command.WHEREAMI);
 
         ignoredKeywords = new ArrayList<String>();
         ignoredKeywords.add("THE");
         ignoredKeywords.add("THAT");
         ignoredKeywords.add("THIS");
         ignoredKeywords.add("TO");
+        ignoredKeywords.add("A");
     }
 
     private InputManager() {}
 
     /**
-     * Parses user input into an Event. If the input is unrecognized or
+     * Parses user input into an UserEvent. If the input is unrecognized or
      * ambiguous, throws an InvalidInputException.
      * @param player Player object.
      * @param input String input.
-     * @return Corresponding Event.
+     * @return Corresponding UserEvent.
      * @exception InvalidInputException
      */
-    public static Event parse(Player player, String input)
+    public static UserEvent parse(Player player, String input)
         throws InvalidInputException {
 
         // input arguments are matched with something in this list.
@@ -121,7 +89,7 @@ public class InputManager {
         int commandIndex = input.indexOf(' ');
         if (commandIndex == -1) { commandIndex = input.length(); }
 
-        EventCode command = EventCode.valueOf(input.substring(0, commandIndex));
+        Command command = Command.valueOf(input.substring(0, commandIndex));
 
         // dealing with 0-arg inputs
         if (commandIndex != input.length()) {
@@ -133,33 +101,27 @@ public class InputManager {
         }
 
         // check for 0-arg commands
-        if (argCountMap.containsKey(command) && argCountMap.get(command) == 0) {
+        if (command.getNumArguments() == 0) {
             if (input.length() == 0) {
-                return new Event(command);
+                return new UserEvent(command);
             }
 
+            // got arguments in a 0-arg command
             else {
                 throw new InvalidInputException("Unexpected arguments.");
             }
         }
 
-        // error check for no arguments
-        if (argCountMap.containsKey(command) && argCountMap.get(command) == 1) {
-            if (input.length() == 0) {
-                throw new InvalidInputException("Missing arguments!");
-            }
-
-            // build the candidate list
-            // match the argument
-            // return the new event
-            else {
-                candidateList = buildCandidateList(command, player);
-                ShardObject object = matchArgument(input, candidateList);
-                return new Event(command, object);
-            }
+        // expected args and didn't get any
+        else if (input.length() == 0) {
+            throw new InvalidInputException("Missing arguments!");
         }
 
-        throw new InvalidInputException("Bad command!");
+        else {
+            candidateList = command.buildCandidateList(player);
+            ShardObject object = matchArgument(input, candidateList);
+            return new UserEvent(command, object);
+        }
     }
 
 
@@ -181,7 +143,7 @@ public class InputManager {
 
         String sub = "";
         int commandEndIndex = 0;
-        EventCode code = null;
+        Command code = null;
 
         // get the longest substring, starting at 0, that matches a command
         for (String t : tokens) {
@@ -202,86 +164,6 @@ public class InputManager {
         // e.g. "go to lounge" becomes "ENTER lounge"
         return code.name() + input.substring(commandEndIndex, input.length());
     }
-
-
-    /**
-     * Build a list of candidates given a command.
-     * @param command Command to build candidates for.
-     * @param player Player to get candidates from.
-     * @return A list of all possible candidates.
-     * @exception InvalidInputException
-     * @see filter()
-     */
-    private static ArrayList<ShardObject> buildCandidateList(
-        EventCode command, Player player)
-        throws InvalidInputException {
-
-        ArrayList<ShardObject> list;
-        Room location = (Room) player.getLocation();
-
-        switch(command) {
-
-            // make a list of all connected rooms
-            case ENTER:
-                list = new ArrayList<ShardObject>();
-                list.addAll(location.getConnectedRooms());
-                return filter(filterMap.get(command), list);
-
-            // make a list of everything
-            case DESCRIBE:
-                list = new ArrayList<ShardObject>();
-                list.add(player);
-                list.add(location);
-                list.addAll(player.getObjects());
-                list.addAll(location.getObjects());
-                list.addAll(location.getConnectedRooms());
-
-                return list;
-
-            // make a list of items in the room
-            case TAKE:
-                list = player.getLocation().getObjects();
-                return filter(filterMap.get(command), list);
-
-            // make a list of items held by the player
-            case DROP:
-                return filter(filterMap.get(command), player.getObjects());
-
-            // make a list of Guests in the room.
-            case TALK:
-                list = new ArrayList<ShardObject>();
-                list.addAll(player.getLocation().getObjects());
-                return filter(filterMap.get(command), list);
-
-            // This shouldn't happen, and it means I forgot to add
-            // an event code to the switch statement
-            default:
-                throw new InvalidInputException("Forgot to implement " +
-                                                command.name());
-        }
-    }
-
-
-    /**
-     * Given a class and a list of Objects, return a list with only entries with
-     * the same class or superclass.
-     * @param filterClass Class to filter to.
-     * @param list List of ShardObjects to filter.
-     * @return A new list.
-     */
-    private static ArrayList<ShardObject> filter(Class filterClass,
-                                                 ArrayList<ShardObject> list) {
-        ArrayList<ShardObject> filteredList = new ArrayList<ShardObject>();
-
-        for (ShardObject o : list) {
-            if (filterClass.isInstance(o)) {
-                filteredList.add(o);
-            }
-        }
-
-        return filteredList;
-    }
-
 
     /**
      * Given a String argument and a list of ShardObject candidates,
@@ -351,13 +233,10 @@ public class InputManager {
      */
     private static int compareKeywords(String arg, String candidate) {
 
-        System.out.println("Comparing: " + arg + " to " + candidate);
-
         String argument = arg.toUpperCase();
         candidate = candidate.toUpperCase();
 
         if (argument.equals(candidate)) {
-            System.out.println(argument + " exact match");
             return InputManager.EXACT_MATCH;
         }
 
