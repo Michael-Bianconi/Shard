@@ -13,73 +13,11 @@ import java.util.Arrays;
 import java.util.ArrayList;
 
 /**
- * Shard
+ * Handles user input.
+ *
  * @author Michael Bianconi
  * @author https://www.github.com/Michael-Bianconi
  * @version 2
- *
- * The InputManager takes input and turns into Shard-readable Events.
- *
- *
- * Update 14 October 2018
- * 
- * I'm very pleased with the InputManger. The file itself is pretty long
- * and complex, but it works well. It can parse several several commands,
- * and any variations of those commands if they're specified in the
- * commandMap variable.
- *
- * Mostly, however, I'm pleased that this manager can guess at what the player
- * wants, so long there isn't any ambiguity.
- *
- * However, it's not a perfect system, and it has limitations.
- *
- * Namely, it can only handle single argument commands where the command
- * keyword precedes the argument. It can also only handle arguments that match
- * to objects of a single type (although that type can be ShardObject).
- *
- * Secondly, developers have to be careful that they correctly implement
- * what each Event requires. That includes:
- *      adding the eventcode name and variations to the commandMap.
- *      adding the argument type to filterMap
- *      adding the number of arguemnts to the argCountMap (must be 0 or 1)
- *      adding the eventcode to buildCandidateList()
- *
- * It's not terrible, but it is kind of a pain and things'll go tits up if
- * one of those steps are forgotten.
- *
- * Finally, the parser can choose to ignore some words to make sense of input.
- * These words, like "the" or "that", can then be placed in weird spots and
- * the input will still be parsed. This is usually great, but it means
- * input like "talk to the fred the barnes the" will still be interpreted
- * as "TALK FRED BARNES".
- *
- * Here's how the InputManager works.
- *
- * The only public method is parse(player, input).
- *
- * 1. The method takes the input, reads in and translates the command into
- *    something Shard-readable (e.g. "go to room" becomes "ENTER room"). If
- *    the command is not recognized, an InvalidInputException is thrown.
- *
- * 2. It determines how many arguments are needed for the command and makes sure
- *    it was supplied with the correct number. If it is a 0-argument
- *    command, it returns the appropriate event. If the wrong number of
- *    arguments are supplied for the command, an InvalidInputException is
- *    thrown.
- *
- * 3. It builds a list of candidates appropriate for the command (e.g. TALK
- *    with build a list of all the Guests in the current room).
- *
- * 4. It compares the given argument to each object's name in the list.
- *    If it comes across an exact match, it immediately selects that candidate.
- *    Otherwise, it counts how many keywords are shared between the argument
- *    and the candidate (e.g. "fred" and "fred barnes" = 1).
- *
- * 5. As it compares each object, it looks to see if that object is the best
- *    match by comparing the number of shared keywords. After going through
- *    each candidate, it returns the closest one. If two candidates have the
- *    closeness rating, the input is declared ambiguous and an
- *    InvalidInputException is thrown.
  */
 public class InputManager {
 
@@ -163,11 +101,11 @@ public class InputManager {
     private InputManager() {}
 
     /**
-     * Parse input. This is InputManager's only public method. See
-     * class documentation for more information on this method.
-     * @param p Player object.
+     * Parses user input into an Event. If the input is unrecognized or
+     * ambiguous, throws an InvalidInputException.
+     * @param player Player object.
      * @param input String input.
-     * @return Shard-readable Event.
+     * @return Corresponding Event.
      * @exception InvalidInputException
      */
     public static Event parse(Player player, String input)
@@ -346,15 +284,10 @@ public class InputManager {
 
 
     /**
-     * Match the given argument to some object in the given list.
-     * When matching arguments, use the getName() method of the
-     * ShardObject.
-     *
-     * There may be some ambiguity when trying to match candidates.
-     * For example, "FRED" will match to "FRED BARNES" and "FRED FREDRICKSON".
-     * In this case, an InvalidInputException is thrown with the the String
-     * "Multiple " + arg + " exist!".
-     *
+     * Given a String argument and a list of ShardObject candidates,
+     * find the one that most closely matches the argument. If two
+     * candidates match equally, consider the input ambiguous and
+     * throw an InvalidInputException.
      * @param arg Argument to match.
      * @param list List of possible candidates.
      * @return The matched candidate.
@@ -408,25 +341,12 @@ public class InputManager {
 
 
     /**
-     * Given two Strings, determine how closely they match to each other.
-     * Closeness is determined by how many words they share. If both share
-     * all the same words, in the same order, they are an exact match.
-     *
-     * e.g.
-     *      FRED BARNES,    FRED BARNES = EXACT_MATCH
-     *      FRED,           FRED BARNES = 1
-     *      BARNES,         FRED BARNES = 1
-     *      LUKE,           FRED BARNES = NO_MATCH
-     *
-     *      BLOODY FRYING PAN,  BLOODY FRYING PAN = EXACT_MATCH
-     *      BLOODY FRYING,      BLOODY FRYING PAN = 2
-     *      PAN,                BLOODY FRYING PAN = 1
-     *      
-     *
+     * Determine how closely two String match each other by comparing
+     * how many keywords they share.
      * @param arg The argument
      * @param candidate The candidate's name
-     * @return Returns EXACT_MATCH if arg.equals(candidate).
-     *         Returns NO_MATCH if arg has a keyword that candidate does not
+     * @return Returns EXACT_MATCH if arg.equals(candidate). 
+     *         Returns NO_MATCH if arg has a keyword that candidate does not. 
      *         Otherwise returns the number of shared keywords.
      */
     private static int compareKeywords(String arg, String candidate) {
