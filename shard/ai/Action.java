@@ -39,4 +39,10 @@ public class Action {
 
         return new Event(action, g, object);
     }
+
+    public static Event generateAction(Murderer m) {
+
+
+        
+    }
 }
