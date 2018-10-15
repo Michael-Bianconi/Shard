@@ -6,40 +6,28 @@
 
 package shard.object;
 
-public class Item extends ShardObject {
+import java.util.Set;
+import java.util.HashSet;
+
+public class Item extends ShardObject implements Tagged {
 
     // MEMBER VARIABLES ========================================================
 
-    private ItemState state;
+    Set<Tag> tags = new HashSet<Tag>();
+
 
     // CONSTRUCTORS ============================================================
 
     public Item(String name) {
-        this(name, name, null, ItemState.NORMAL);
+        this(name, name, null);
     }
 
     public Item(String name, String description) {
-        this(name, description, null, ItemState.NORMAL);
+        this(name, description, null);
     }
 
     public Item(String name, Owner location) {
-        this(name, name, location, ItemState.NORMAL);
-    }
-
-    public Item(String name, ItemState state) {
-        this(name, name, null, state);
-    }
-
-    public Item(String name, String description, ItemState state) {
-        this(name, description, null, state);
-    }
-
-    public Item(String name, String description, Owner location) {
-        this(name, description, location, ItemState.NORMAL);
-    }
-
-    public Item(String name, Owner location, ItemState state) {
-        this(name, name, location, state);
+        this(name, name, location);
     }
 
     /**
@@ -51,44 +39,17 @@ public class Item extends ShardObject {
      *                    name should have the same description but it's not
      *                    required).
      * @param location Location of the object.
-     * @param state This Item's ItemState.
      */
-    public Item(String name,
-                String description,
-                Owner location,
-                ItemState state) {
+    public Item(String name, String description, Owner location) {
         super(name, description, location);
-        this.state = state;
     }
 
     // ACCESSORS ===============================================================
-    public ItemState getItemState() { return this.state; }
-    public void setItemState(ItemState s) { this.state = s; }
-
-    /**
-     * If this Item's state is non-NORMAL, append the state to the end of
-     * the description.
-     * @return String
-     */
-    @Override
-    public String getDescription() {
-        String ret = this.getDescription();
-
-        if (this.state != ItemState.NORMAL) {
-            ret += " It's " + this.state.name().toLowerCase();
-        }
-
-        return ret;
-    }
+    public Set<Tag> getTags() { return this.tags; }
+    public void addTag(Tag t) { this.tags.add(t); }
+    public void removeTag(Tag t) { this.tags.remove(t); }
+    public boolean hasTag(Tag t) { return this.tags.contains(t); }
 
     // OVERRIDE METHODS ========================================================
-    /**
-     * Include the item's state if it's non-NORMAL.
-     * @return String
-     */
-    @Override
-    public String toString() {
-        if (state == ItemState.NORMAL) { return super.toString(); }
-        else { return state.name().toLowerCase() + " " + super.toString(); }
-    }
+
 }
