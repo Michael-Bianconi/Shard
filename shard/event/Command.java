@@ -139,6 +139,24 @@ public enum Command {
         public String pastTense() { return "talked to"; }
     },
 
+    TALK_TO_PLAYER {
+        @Override
+        public ArrayList<ShardObject> buildCandidateList(ShardObject target) {
+            ArrayList<ShardObject> list = new ArrayList<ShardObject>();
+            list.addAll(target.getLocation().getObjects());
+            return filter(Player.class, list);
+        }
+
+        @Override
+        public void execute(ShardObject executor, ShardObject item) {
+            Player p = (Player) item;
+            // stuff
+        }
+
+        @Override
+        public String pastTense() { return "talked to"; }
+    },
+
     INVESTIGATE {
         @Override
         public void execute(ShardObject executor, ShardObject item) {

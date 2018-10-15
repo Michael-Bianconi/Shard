@@ -4,14 +4,19 @@ JDE := javac
 # interpreter
 JVM := java
 
+# extension
+EXT := .java
+
 # documentation generator
 JAVADOC := javadoc -d docs -subpackages shard -html5
 
-# path to file with main()
-ENTRY := shard/test/MemoryTest.java
+# test jde path
+ENTRY := shard/test/
 
-# executable
-EXE := shard.test.MemoryTest
+# test jvm path
+EXE := shard.test.
+
+TEST := TEST_NOT_SPECIFIED
 
 # remove all class files
 CLEAN_COMMAND := find . -name "*.class" -type f -delete
@@ -22,10 +27,10 @@ all:
 	$(MAKE) run --no-print-directory
 
 compile:
-	${JDE} ${ENTRY}
+	${JDE} ${ENTRY}${TEST}${EXT}
 
 run:
-	${JVM} ${EXE}
+	${JVM} ${EXE}${TEST}
 
 clean:
 	${CLEAN_COMMAND}
