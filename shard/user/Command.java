@@ -27,6 +27,12 @@ public enum Command {
 
             executor.setLocation((Owner) location);
         }
+
+        @Override
+        public String remember() { return true; }
+
+        @Override
+        public String pastTense() { return "entered"; }
     },
 
     DESCRIBE {
@@ -52,6 +58,9 @@ public enum Command {
             System.out.println(item.getDescription());
         }
 
+        @Override
+        public String pastTense() { return "described"; }
+
     },  
 
     TAKE {
@@ -69,6 +78,12 @@ public enum Command {
         public void execute(ShardObject executor, ShardObject item) {
             item.setLocation((Owner) executor);
         }
+
+        @Override
+        public boolean remember() { return true; }
+
+        @Override
+        public String pastTense() { return "took"; }
     },
 
     DROP {
@@ -85,6 +100,12 @@ public enum Command {
         public void execute(ShardObject executor, ShardObject item) {
             item.setLocation(executor.getLocation());
         }
+
+        @Override
+        public boolean remember() { return true; }
+
+        @Override
+        public String pastTense() { return "dropped"; }
 
     },
 
@@ -106,6 +127,9 @@ public enum Command {
             Memory guest = (Memory) item;
             Conversation.converse(guest);
         }
+
+        @Override
+        public String pastTense() { return "talked"; }
     },
 
     INVESTIGATE {
@@ -201,4 +225,17 @@ public enum Command {
 
         return filteredList;
     }
+
+
+    /**
+     * Boolean flag for if guests should remember these events happening.
+     * By default, false.
+     */
+    public boolean remember() { return false; }
+
+
+    /**
+     * The past tense of the command. By default, the lowercase name.
+     */
+    public String pastTense() { return name().toLowerCase(); }
 }
