@@ -99,6 +99,13 @@ public enum Command {
 
         @Override
         public int getNumArguments() { return 1; }
+
+        @Override
+        public void execute(ShardObject executor, ShardObject item) {
+            System.out.println("executing");
+            Memory guest = (Memory) item;
+            Conversation.converse(guest);
+        }
     },
 
     INVESTIGATE {
@@ -170,7 +177,9 @@ public enum Command {
      * @param executor ShardObject that is initiating this event.
      * @param item Argument to execute the command with.
      */
-    public void execute(ShardObject executor, ShardObject item) {    }
+    public void execute(ShardObject executor, ShardObject item) {
+        System.out.println("Executing default");
+    }
 
 
     /**
