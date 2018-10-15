@@ -18,6 +18,7 @@ public class OutputManager {
         return type.prefix() + string + type.suffix();
     }
 
+    /** Format the event so that it's pleasant to read. */
     public static String format(Event e) {
 
         String formattedString = "";
