@@ -4,5 +4,9 @@ public enum Tag {
     
     CLUE,
     WEAPON,
-    TRAP
+    TRAP,
+    MOVEABLE,
+    INTERACTABLE,
+    IMPORTANT,
+    HIDDEN
 }

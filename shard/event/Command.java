@@ -2,6 +2,7 @@ package shard.event;
 import shard.object.*;
 import shard.user.*;
 import java.util.ArrayList;
+import java.util.Random;
 /**
  * @author Michael Bianconi
  * @author https://www.github.com/Michael-Bianconi

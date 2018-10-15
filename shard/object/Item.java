@@ -9,7 +9,7 @@ package shard.object;
 import java.util.Set;
 import java.util.HashSet;
 
-public class Item extends ShardObject implements Tagged {
+public class Item extends ShardObject {
 
     // MEMBER VARIABLES ========================================================
 
