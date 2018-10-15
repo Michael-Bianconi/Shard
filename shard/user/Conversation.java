@@ -31,7 +31,7 @@ public class Conversation {
         int selectedQuestion = 0;
         while(selectedQuestion != 2) {
             printQuestions();
-            System.out.print("$ ");
+            System.out.print(OutputType.USER_INPUT_REQUESTED.prefix());
             selectedQuestion = in.nextInt();
             respond(selectedQuestion, memory);
         }
@@ -41,8 +41,10 @@ public class Conversation {
     private static void printQuestions() {
         for (int i = 0; i < questions.size(); i++)
         {
-            OutputManager.print(OutputType.CONVERSATION_QUESTION,
-                                i + " " + questions.get(i));
+            System.out.println(
+                OutputManager.format(OutputType.CONVERSATION_QUESTION,
+                                     i + " " + questions.get(i))
+            );
         }
     }
 
@@ -50,21 +52,27 @@ public class Conversation {
 
         switch(index) {
             case 0:
-                OutputManager.print(OutputType.CONVERSATION_RESPONSE,
-                                    memory.getLatestMemory());
+                System.out.println(
+                    OutputManager.format(OutputType.CONVERSATION_RESPONSE,
+                                     memory.getLatestMemory())
+                );
                 break;
             case 1:
                 for (String m : memory.getMemories()) {
-                    OutputManager.print(OutputType.CONVERSATION_RESPONSE, m);
+                    System.out.println(
+                        OutputManager.format(OutputType.CONVERSATION_RESPONSE,
+                                             m)
+                    );
                 }
                 break;
             case 2:
                 break;
             default:
-                OutputManager.print(OutputType.CONVERSATION_RESPONSE,
-                                    "I'm not quite sure what you're saying.");
+                System.out.println(
+                    OutputManager.format(OutputType.CONVERSATION_RESPONSE,
+                                        "I'm not sure what you're saying.")
+                );
         }
-
         return;
     }
 }

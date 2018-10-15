@@ -1,4 +1,5 @@
 package shard.user;
+import shard.object.Player;
 
 /**
  * The OutputManager formats Strings according to their purpose before
@@ -13,35 +14,31 @@ public class OutputManager {
 
     private OutputManager() {   }
 
-    public static void print(OutputType type, String string) {
-        switch(type) {
+    public static String format(OutputType type, String string) {
+        return type.prefix() + string + type.suffix();
+    }
 
-            case USER_EVENT:
-                System.out.println("> " + string);
-                break;
+    public static String format(Event e) {
 
-            case CONVERSATION_QUESTION:
-                System.out.println("... " + string);
-                break;
+        String formattedString = "";
 
-            case CONVERSATION_RESPONSE:
-                System.out.println(">>> " + string);
-                break;
+        if (e.getExecutor() instanceof Player) {
 
-            case GUEST_EVENT:
-                System.out.println("* " + string);
-                break;
-
-            case DESCRIPTION:
-                System.out.println("--- " + string);
-                break;
-
-            case LIST_ITEM:
-                System.out.println("[] " + string);
-                break;
-
-            default:
-                System.out.println(string);
+            formattedString =
+                OutputType.USER_EVENT.prefix() +
+                "You " + e.getCommand().pastTense();
         }
+
+        else {
+            formattedString =
+                OutputType.GUEST_EVENT.prefix() +
+                e.getExecutor().getName() + " " + e.getCommand().pastTense();
+        }
+
+        if (e.getArgument() != null) {
+            formattedString += " " + e.getArgument().getName();
+        }
+
+        return formattedString;
     }
 }

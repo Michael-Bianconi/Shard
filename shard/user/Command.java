@@ -29,7 +29,7 @@ public enum Command {
         }
 
         @Override
-        public String remember() { return true; }
+        public boolean remember() { return true; }
 
         @Override
         public String pastTense() { return "entered"; }
@@ -55,7 +55,10 @@ public enum Command {
 
         @Override
         public void execute(ShardObject executor, ShardObject item) {
-            System.out.println(item.getDescription());
+            System.out.println(
+                OutputManager.format(OutputType.DESCRIPTION,
+                                     item.getDescription())
+            );
         }
 
         @Override
@@ -123,13 +126,12 @@ public enum Command {
 
         @Override
         public void execute(ShardObject executor, ShardObject item) {
-            System.out.println("executing");
             Memory guest = (Memory) item;
             Conversation.converse(guest);
         }
 
         @Override
-        public String pastTense() { return "talked"; }
+        public String pastTense() { return "talked to"; }
     },
 
     INVESTIGATE {
@@ -138,7 +140,10 @@ public enum Command {
 
             ArrayList<ShardObject> objs = executor.getLocation().getObjects();
             for (ShardObject o : objs) {
-                System.out.println(o.getName());
+                System.out.println(
+                    OutputManager.format(OutputType.LIST_ITEM,
+                                         o.getName())
+                );
             }
         }
 
@@ -147,7 +152,11 @@ public enum Command {
     WHOAMI {
         @Override
         public void execute(ShardObject executor, ShardObject item) {
-            System.out.println(executor.getName());
+
+            System.out.println(
+                OutputManager.format(OutputType.DESCRIPTION,
+                                     executor.getName())
+            );
         }
     },
 
@@ -155,8 +164,12 @@ public enum Command {
 
         @Override
         public void execute(ShardObject executor, ShardObject item) {
+
             ShardObject o = (ShardObject) executor.getLocation();
-            System.out.println(o.getName());
+            System.out.println(
+                OutputManager.format(OutputType.DESCRIPTION,
+                                     o.getName())
+            );
         }
     },
 
@@ -168,7 +181,10 @@ public enum Command {
             Owner owner = (Owner) executor;
 
             for (ShardObject o : owner.getObjects()) {
-                System.out.println(o.getName());
+                System.out.println(
+                    OutputManager.format(OutputType.LIST_ITEM,
+                                         o.getName())
+                );
             }
         }
     },
