@@ -1,5 +1,6 @@
 package shard.user;
 import shard.object.Player;
+import shard.event.Event;
 
 /**
  * The OutputManager formats Strings according to their purpose before

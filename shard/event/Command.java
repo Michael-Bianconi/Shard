@@ -1,5 +1,6 @@
-package shard.user;
+package shard.event;
 import shard.object.*;
+import shard.user.*;
 import java.util.ArrayList;
 /**
  * @author Michael Bianconi
@@ -11,10 +12,10 @@ import java.util.ArrayList;
 public enum Command {
     ENTER {
         @Override
-        public ArrayList<ShardObject> buildCandidateList(Player player) {
+        public ArrayList<ShardObject> buildCandidateList(ShardObject target) {
 
             ArrayList<ShardObject> list = new ArrayList<ShardObject>();
-            Room location = (Room) player.getLocation();
+            Room location = (Room) target.getLocation();
             list.addAll(location.getConnectedRooms());
             return filter(Room.class, list);
         }
@@ -37,13 +38,16 @@ public enum Command {
 
     DESCRIBE {
         @Override
-        public ArrayList<ShardObject> buildCandidateList(Player player) {
+        public ArrayList<ShardObject> buildCandidateList(ShardObject target) {
 
             ArrayList<ShardObject> list = new ArrayList<ShardObject>();
-            Room location = (Room) player.getLocation();
-            list.add(player);
+            Room location = (Room) target.getLocation();
+            list.add(target);
             list.add(location);
-            list.addAll(player.getObjects());
+
+            Owner o = (Owner) target;
+
+            list.addAll(o.getObjects());
             list.addAll(location.getObjects());
             list.addAll(location.getConnectedRooms());
 
@@ -68,9 +72,9 @@ public enum Command {
 
     TAKE {
         @Override
-        public ArrayList<ShardObject> buildCandidateList(Player player) {
+        public ArrayList<ShardObject> buildCandidateList(ShardObject target) {
 
-            ArrayList<ShardObject> list = player.getLocation().getObjects();
+            ArrayList<ShardObject> list = target.getLocation().getObjects();
             return filter(Item.class, list);
         }
 
@@ -91,9 +95,10 @@ public enum Command {
 
     DROP {
         @Override
-        public ArrayList<ShardObject> buildCandidateList(Player player) {
+        public ArrayList<ShardObject> buildCandidateList(ShardObject target) {
 
-            return filter(Item.class, player.getObjects());
+            Owner o = (Owner) target;
+            return filter(Item.class, o.getObjects());
         }
 
         @Override
@@ -114,10 +119,10 @@ public enum Command {
 
     TALK {
         @Override
-        public ArrayList<ShardObject> buildCandidateList(Player player) {
+        public ArrayList<ShardObject> buildCandidateList(ShardObject target) {
 
             ArrayList<ShardObject> list = new ArrayList<ShardObject>();
-            list.addAll(player.getLocation().getObjects());
+            list.addAll(target.getLocation().getObjects());
             return filter(Guest.class, list);
         }
 
@@ -198,7 +203,7 @@ public enum Command {
      * @param player Player to search through.
      * @return Return all valid candidates.
      */
-    public ArrayList<ShardObject>buildCandidateList(Player player) {
+    public ArrayList<ShardObject>buildCandidateList(ShardObject target) {
         return new ArrayList<ShardObject>();
     }
 

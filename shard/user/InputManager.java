@@ -1,5 +1,6 @@
 package shard.user;
 import shard.object.*;
+import shard.event.*;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Arrays;

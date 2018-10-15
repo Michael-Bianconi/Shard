@@ -1,5 +1,6 @@
-package shard.user;
+package shard.event;
 import shard.object.*;
+import shard.user.*;
 import java.util.ArrayList;
 import java.util.Objects;
 
