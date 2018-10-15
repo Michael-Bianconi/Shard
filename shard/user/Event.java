@@ -34,9 +34,8 @@ public class Event {
     public Command getCommand() { return this.command; }
     public ShardObject getArgument() { return this.argument; }
     public ShardObject getExecutor() { return this.executor; }
-    public void execute() {
-        command.execute(executor, argument);
-    }
+    public void execute() { command.execute(executor, argument); }
+    public String toMemory() { return OutputManager.format(this); }
 
     // override methods ========================================================
 
