@@ -11,6 +11,7 @@ import java.util.Random;
  * List of different Commands that the player can use.
  */
 public enum Command {
+
     ENTER {
         @Override
         public ArrayList<ShardObject> buildCandidateList(ShardObject target) {
@@ -84,7 +85,8 @@ public enum Command {
 
         @Override
         public void execute(ShardObject executor, ShardObject item) {
-            item.setLocation((Owner) executor);
+            Item i = (Item) item;
+            if (i.getMovable()) { item.setLocation((Owner) executor); }
         }
 
         @Override
@@ -107,7 +109,9 @@ public enum Command {
 
         @Override
         public void execute(ShardObject executor, ShardObject item) {
-            item.setLocation(executor.getLocation());
+            Item i = (Item) item;
+            if (i.getMovable()) { item.setLocation(executor.getLocation()); }
+            else { System.out.println("immovable object."); }
         }
 
         @Override
@@ -115,6 +119,30 @@ public enum Command {
 
         @Override
         public String pastTense() { return "dropped"; }
+
+    },
+
+    USE {
+        @Override
+        public ArrayList<ShardObject> buildCandidateList(ShardObject target) {
+            return Command.DESCRIBE.buildCandidateList(target);
+        }
+
+        @Override
+        public int getNumArguments() { return 1; }
+
+        @Override
+        public void execute(ShardObject executor, ShardObject item) {
+            Item i = (Item) item;
+            Event e = i.use(executor);
+            e.execute();
+        }
+
+        @Override
+        public boolean remember() { return true; }
+
+        @Override
+        public String pastTense() { return "used"; }
 
     },
 
@@ -210,6 +238,13 @@ public enum Command {
                                          o.getName())
                 );
             }
+        }
+    },
+
+    QUIT {
+        @Override
+        public void execute(ShardObject executor, ShardObject item) {
+            System.exit(0);
         }
     },
 

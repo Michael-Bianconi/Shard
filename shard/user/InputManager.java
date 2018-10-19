@@ -45,6 +45,9 @@ public class InputManager {
         commandMap.put("PICK UP",       Command.TAKE);
         commandMap.put("DROP",          Command.DROP);
         commandMap.put("LEAVE",         Command.DROP);
+        commandMap.put("USE",           Command.USE);
+        commandMap.put("INTERACT",      Command.USE);
+        commandMap.put("INTERACT WITH", Command.USE);
         commandMap.put("INVESTIGATE",   Command.INVESTIGATE);
         commandMap.put("LOOK AROUND",   Command.INVESTIGATE);
         commandMap.put("TALK",          Command.TALK);
@@ -59,6 +62,7 @@ public class InputManager {
         commandMap.put("WHERE AM I",    Command.WHEREAMI);
         commandMap.put("WHERE AM I?",   Command.WHEREAMI);
         commandMap.put("INVENTORY",     Command.INVENTORY);
+        commandMap.put("QUIT",          Command.QUIT);
 
         ignoredKeywords = new ArrayList<String>();
         ignoredKeywords.add("THE");
