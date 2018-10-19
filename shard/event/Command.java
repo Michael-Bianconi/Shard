@@ -146,6 +146,27 @@ public enum Command {
 
     },
 
+    KILL {
+        @Override
+        public ArrayList<ShardObject> buildCandidateList(ShardObject target) {
+            return Command.TALK.buildCandidateList(target);
+        }
+
+        @Override
+        public int getNumArguments() { return 1; }
+
+        // put the guest in his own little room and replace them with a body
+        @Override
+        public void execute(ShardObject executor, ShardObject item) {
+
+            Guest guest = (Guest) item;
+            Item deadGuest = new Item(guest.getName(), "he's dead, jim", item.getLocation());
+            guest.setLocation(new Room());
+        }
+
+
+    },
+
     TALK {
         @Override
         public ArrayList<ShardObject> buildCandidateList(ShardObject target) {
