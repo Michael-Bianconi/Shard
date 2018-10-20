@@ -26,19 +26,26 @@ public class OutputManager {
 
         if (e.getExecutor() instanceof Player) {
 
-            formattedString =
-                OutputType.USER_EVENT.prefix() +
-                "You " + e.getCommand().pastTense();
+            formattedString = OutputType.USER_EVENT.prefix()
+                            + "You " + e.getCommand().pastTense();
+
+            if (e.getArgument() != null) {
+                formattedString += " " + e.getArgument().getName();
+            }
+
+            formattedString += OutputType.USER_EVENT.suffix();
         }
 
         else {
-            formattedString =
-                OutputType.GUEST_EVENT.prefix() +
-                e.getExecutor().getName() + " " + e.getCommand().pastTense();
-        }
+            formattedString = OutputType.GUEST_EVENT.prefix()
+                            + e.getExecutor().getName() + " "
+                            + e.getCommand().pastTense();
 
-        if (e.getArgument() != null) {
-            formattedString += " " + e.getArgument().getName();
+            if (e.getArgument() != null) {
+                formattedString += " " + e.getArgument().getName();
+            }
+
+            formattedString += OutputType.GUEST_EVENT.suffix();
         }
 
         return formattedString;
