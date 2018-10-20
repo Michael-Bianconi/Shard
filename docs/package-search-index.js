@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"shard.event"},{"l":"shard.object"},{"l":"shard.test"},{"l":"shard.user"}]
+packageSearchIndex = [{"l":"shard.ai"},{"l":"shard.event"},{"l":"shard.object"},{"l":"shard.test"},{"l":"shard.user"}]
