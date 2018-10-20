@@ -64,6 +64,7 @@ public class InputManager {
         commandMap.put("INVENTORY",     Command.INVENTORY);
         commandMap.put("QUIT",          Command.QUIT);
         commandMap.put("SKIP",          Command.SKIP);
+        commandMap.put("ACCUSE",        Command.ACCUSE);
 
         ignoredKeywords = new ArrayList<String>();
         ignoredKeywords.add("THE");

@@ -25,6 +25,7 @@ public class Guest extends ShardObject implements Owner, Memory {
     private ArrayList<ShardObject> inventory;
     private ArrayList<String> memories;
     private boolean dead;
+    private boolean murderer;
 
 
     // CONSTRUCTOR =============================================================
@@ -65,6 +66,9 @@ public class Guest extends ShardObject implements Owner, Memory {
 
     public boolean getDead() { return dead; }
     public void setDead(boolean b) { dead = b; }
+
+    public boolean isMurderer() { return murderer; }
+    public void setIsMurderer(boolean b) { murderer = b; }
 
     public ArrayList<String> getMemories() { return memories; }
     public void addMemory(String m) { memories.add(m); }

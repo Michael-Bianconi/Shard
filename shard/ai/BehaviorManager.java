@@ -74,15 +74,12 @@ public class BehaviorManager {
         ArrayList<ShardObject> inventory =
             Command.INVENTORY.buildCandidateList(murderer);
 
-        System.out.println(victims);
-
         // if alone in the room with one person
         if (!inRoomWithPlayer(murderer) && victims.size() == 1) {
 
             Guest victim = (Guest) victims.get(0);
 
             // if holding a weapon
-            System.out.println(inventory);
             for (ShardObject object : inventory) {
                 Item item = (Item) object;
                 if (item.getWeapon()) {

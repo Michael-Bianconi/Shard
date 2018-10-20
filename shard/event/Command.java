@@ -12,6 +12,8 @@ import java.util.Random;
  */
 public enum Command {
 
+
+
     /** Enter another room (does not have to be connected). */
     ENTER {
 
@@ -37,6 +39,10 @@ public enum Command {
         public void execute(ShardObject executor, ShardObject location) {
 
             executor.setLocation((Owner) location);
+
+            if (executor instanceof Player) {
+                DESCRIBE.execute(executor, location);
+            }
         }
 
         /** Guests will remember this. */
@@ -46,6 +52,8 @@ public enum Command {
         @Override
         public String pastTense() { return "entered"; }
     },
+
+
 
     /** Print out a description (the executor has no impact on the result). */
     DESCRIBE {
@@ -75,9 +83,45 @@ public enum Command {
         /** Print out the description of the given object. */
         @Override
         public void execute(ShardObject executor, ShardObject item) {
+
+            String description = item.getDescription();
+
+            if (item instanceof Room) {
+                Room room = (Room) item;
+
+                ArrayList<ShardObject> unfilteredObjects = room.getObjects();
+                ArrayList<ShardObject> objects = new ArrayList<ShardObject>();
+
+                for (ShardObject o : unfilteredObjects) {
+                    if (!(o instanceof Player)) {
+                        objects.add(o);
+                    }
+                }
+
+                if (objects.size() == 1) {
+                    description += " " + objects.get(0) + " is here.";
+                }
+
+                else if (objects.size() > 1) {
+                    description += " There's ";
+
+                    for (int i = 0; i < objects.size(); i++) {
+                        if (i == objects.size() - 1) {
+                            description += "and " + objects.get(i).getName() + ".";
+                        }
+
+                        else {
+                            description += objects.get(i).getName() + ", ";
+                        }
+                    }
+                }
+            }
+
+
+
+
             System.out.println(
-                OutputManager.format(OutputType.DESCRIPTION,
-                                     item.getDescription())
+                OutputManager.format(OutputType.DESCRIPTION, description)
             );
         }
 
@@ -286,7 +330,44 @@ public enum Command {
             }
         }
 
+        @Override
+        public boolean consumesAction() { return false; }
+
     }, 
+
+
+    /** Accuse a Guest of being the murderer. */
+    ACCUSE {
+
+        /** Get list of all the people in the room. */
+        @Override
+        public ArrayList<ShardObject> buildCandidateList(ShardObject target) {
+
+            return filter(Guest.class, target.getLocation().getObjects());
+        }
+
+        /** If correct, the player wins. If incorrect, the player dies. */
+        @Override
+        public void execute(ShardObject executor, ShardObject item) {
+            Guest accused = (Guest) item;
+
+            if (accused.isMurderer()) {
+
+                System.out.println(accused.getName() + " was the murderer!");
+                System.exit(0);
+            }
+
+            else {
+
+                System.out.println(accused.getName() + " wasn't the murderer.");
+                System.exit(0);
+            }
+        }
+
+        @Override
+        public int getNumArguments() { return 1; }
+
+    },
 
     /** Print out who this is. */
     WHOAMI {
