@@ -229,10 +229,11 @@ public enum Command {
 
             Guest guest = (Guest) item;
             Owner location = item.getLocation();
+            String name = guest.getName() + " (dead)";
             String description = "Here lies " + guest.getName() + ", dead.";
 
             guest.setDead(true);
-            Item deadGuest = new Item(guest.getName(), description, location);
+            Item deadGuest = new Item(name, description, location);
             guest.setLocation(new Room());
         }
 
