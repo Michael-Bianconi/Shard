@@ -213,7 +213,7 @@ public class InputManager {
         }
 
         if (matchObject == null) {
-            throw new InvalidInputException("Cannot find: " + arg);
+            throw new InvalidInputException("Cannot : " + arg);
         }
 
         else if (ambiguous) {

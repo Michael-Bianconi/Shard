@@ -76,8 +76,14 @@ public enum Command {
         @Override
         public ArrayList<ShardObject> buildCandidateList(ShardObject target) {
 
-            ArrayList<ShardObject> list = target.getLocation().getObjects();
-            return filter(Item.class, list);
+            ArrayList<ShardObject> items = new ArrayList<ShardObject>();
+        
+            for (ShardObject i : filter(Item.class, target.getLocation().getObjects())) {
+                Item item = (Item) i;
+                if (item.getMovable()) { items.add(i); }
+            }
+
+            return items;
         }
 
         @Override
@@ -101,7 +107,14 @@ public enum Command {
         public ArrayList<ShardObject> buildCandidateList(ShardObject target) {
 
             Owner o = (Owner) target;
-            return filter(Item.class, o.getObjects());
+            ArrayList<ShardObject> items = new ArrayList<ShardObject>();
+        
+            for (ShardObject i : filter(Item.class, o.getObjects())) {
+                Item item = (Item) i;
+                if (item.getMovable()) { items.add(i); }
+            }
+
+            return items;
         }
 
         @Override
@@ -125,7 +138,20 @@ public enum Command {
     USE {
         @Override
         public ArrayList<ShardObject> buildCandidateList(ShardObject target) {
-            return Command.DESCRIBE.buildCandidateList(target);
+            ArrayList<ShardObject> list = new ArrayList<ShardObject>();
+
+            for (ShardObject i : filter(Item.class, target.getLocation().getObjects())){
+                Item item = (Item) i;
+                if (item.getUsable()) { list.add(i); }
+            }
+
+            Owner o = (Owner) target;
+            for (ShardObject i : filter(Item.class, o.getObjects())) {
+                Item item = (Item) i;
+                if (item.getUsable()) { list.add(i); }
+            }
+
+            return list;
         }
 
         @Override
@@ -275,7 +301,7 @@ public enum Command {
      * Given a player, create an ArrayList of all possible candidates that
      * could be used with this command. Overridden by individual enums.
      * If not overridden, returns an empty list.
-     * @param player Player to search through.
+     * @param target Player to search through.
      * @return Return all valid candidates.
      */
     public ArrayList<ShardObject>buildCandidateList(ShardObject target) {
@@ -298,7 +324,7 @@ public enum Command {
      * @param item Argument to execute the command with.
      */
     public void execute(ShardObject executor, ShardObject item) {
-        System.out.println("Executing default");
+        //System.out.println("Executing default");
     }
 
 
