@@ -258,7 +258,7 @@ public enum Command {
         public ArrayList<ShardObject> buildCandidateList(ShardObject target) {
 
             ArrayList<ShardObject> list =
-                Command.TALK.buildCandidateList(target);
+                filter(Guest.class, target.getLocation().getObjects());
 
             list.remove(target);
             return list;
@@ -286,32 +286,6 @@ public enum Command {
 
         @Override
         public String pastTense() { return "killed"; }
-    },
-
-    /** Talk to a guest. Player only. */
-    TALK {
-
-        /** Build a list of Guests in the target's room. */
-        @Override
-        public ArrayList<ShardObject> buildCandidateList(ShardObject target) {
-
-            ArrayList<ShardObject> list = new ArrayList<ShardObject>();
-            list.addAll(target.getLocation().getObjects());
-            return filter(Guest.class, list);
-        }
-
-        @Override
-        public int getNumArguments() { return 1; }
-
-        /** Have a Conversation with the guest. */
-        @Override
-        public void execute(ShardObject executor, ShardObject item) {
-            Memory guest = (Memory) item;
-            Conversation.converse(guest);
-        }
-
-        @Override
-        public String pastTense() { return "talked to"; }
     },
 
     /** Print out the Items in the room. */

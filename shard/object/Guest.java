@@ -19,11 +19,10 @@ package shard.object;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Guest extends ShardObject implements Owner, Memory {
+public class Guest extends ShardObject implements Owner {
 
     // MEMBER VARIABLES ========================================================
     private ArrayList<ShardObject> inventory;
-    private ArrayList<String> memories;
     private boolean dead;
     private boolean murderer;
 
@@ -53,27 +52,33 @@ public class Guest extends ShardObject implements Owner, Memory {
     public Guest(String name, String description, Owner location) {
         super(name, description, location);
         this.inventory = new ArrayList<ShardObject>();
-        this.memories = new ArrayList<String>();
         this.dead = false;
+        this.murderer = false;
     }
 
     // ACCESSORS ===============================================================
 
+    /** Return a List of the objects held by this Guest. */
     public ArrayList<ShardObject> getObjects() { return inventory; }
+
+    /** Add an object to this Guest's inventory. */
     public void addObject(ShardObject o) { inventory.add(o); }
+
+    /** Remove an object from this Guest's inventory. */
     public void removeObject(ShardObject o) { inventory.remove(o); }
+
+    /** Check if the Guest has an object in their inventory. */
     public boolean hasObject(ShardObject o) { return inventory.contains(o); }
 
-    public boolean getDead() { return dead; }
+    /** True if this person is dead. */
+    public boolean isDead() { return dead; }
+
+    /** Sets this Guest either to dead or alive. */
     public void setDead(boolean b) { dead = b; }
 
+    /** Returns whether or not this guest is the murderer. */
     public boolean isMurderer() { return murderer; }
-    public void setIsMurderer(boolean b) { murderer = b; }
 
-    public ArrayList<String> getMemories() { return memories; }
-    public void addMemory(String m) { memories.add(m); }
-    public String getLatestMemory() {
-        if (memories.size() == 0) { return "I can't remember anything"; }
-        else { return memories.get(memories.size() - 1); }
-    }
+    /** Set whether or not this guest is the murderer. */
+    public void setIsMurderer(boolean b) { murderer = b; }
 }

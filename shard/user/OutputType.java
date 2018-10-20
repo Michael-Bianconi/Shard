@@ -6,19 +6,6 @@ public enum OutputType {
         public String prefix() { return "> "; }
     },
 
-    CONVERSATION_QUESTION {
-        @Override
-        public String prefix() { return "... "; }
-
-    },
-
-    CONVERSATION_RESPONSE {
-        @Override
-        public String prefix() { return "\""; }
-        @Override
-        public String suffix() { return "\""; }
-    },
-
     GUEST_EVENT {
         @Override
         public String prefix() { return " * "; }

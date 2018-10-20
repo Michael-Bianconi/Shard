@@ -50,9 +50,6 @@ public class InputManager {
         commandMap.put("INTERACT WITH", Command.USE);
         commandMap.put("INVESTIGATE",   Command.INVESTIGATE);
         commandMap.put("LOOK AROUND",   Command.INVESTIGATE);
-        commandMap.put("TALK",          Command.TALK);
-        commandMap.put("TALK TO",       Command.TALK);
-        commandMap.put("TALK WITH",     Command.TALK);
         commandMap.put("WHOAMI",        Command.WHOAMI);
         commandMap.put("WHOAMI?",       Command.WHOAMI);
         commandMap.put("WHO AM I",      Command.WHOAMI);
