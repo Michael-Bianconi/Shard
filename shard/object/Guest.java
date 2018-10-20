@@ -24,6 +24,7 @@ public class Guest extends ShardObject implements Owner, Memory {
     // MEMBER VARIABLES ========================================================
     private ArrayList<ShardObject> inventory;
     private ArrayList<String> memories;
+    private boolean dead;
 
 
     // CONSTRUCTOR =============================================================
@@ -52,6 +53,7 @@ public class Guest extends ShardObject implements Owner, Memory {
         super(name, description, location);
         this.inventory = new ArrayList<ShardObject>();
         this.memories = new ArrayList<String>();
+        this.dead = false;
     }
 
     // ACCESSORS ===============================================================
@@ -60,6 +62,9 @@ public class Guest extends ShardObject implements Owner, Memory {
     public void addObject(ShardObject o) { inventory.add(o); }
     public void removeObject(ShardObject o) { inventory.remove(o); }
     public boolean hasObject(ShardObject o) { return inventory.contains(o); }
+
+    public boolean getDead() { return dead; }
+    public void setDead(boolean b) { dead = b; }
 
     public ArrayList<String> getMemories() { return memories; }
     public void addMemory(String m) { memories.add(m); }

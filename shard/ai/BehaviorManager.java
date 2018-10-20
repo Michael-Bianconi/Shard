@@ -18,7 +18,7 @@ public class BehaviorManager {
 
     private static boolean fiftyFifty() { return Math.random() < 0.5; }
 
-    public static Event action(Guest g) {
+    public static Event guestAction(Guest g) {
 
         Random rand = new Random();
 
@@ -61,6 +61,32 @@ public class BehaviorManager {
 
         // do nothing
         return new Event(Command.ERROR, g, new ShardObject("null"));
+    }
+
+    public static Event murdererAction(Guest g) {
+
+        ArrayList<ShardObject> candidates = Command.KILL.buildCandidateList(g);
+
+        // if alone in the room with a person
+        if (!inRoomWithPlayer(g) && candidates.size() == 1) {
+            return new Event(Command.KILL, g, candidates.get(0));
+        }
+
+        else {
+            return guestAction(g);
+        }
+
+    }
+
+    private static boolean inRoomWithPlayer(Guest g) {
+
+        ArrayList<ShardObject> objects = g.getLocation().getObjects();
+
+        for (ShardObject o : objects) {
+            if (o instanceof Player) { return true; }
+        }
+
+        return false;
     }
 
 
