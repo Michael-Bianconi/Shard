@@ -63,6 +63,7 @@ public class InputManager {
         commandMap.put("WHERE AM I?",   Command.WHEREAMI);
         commandMap.put("INVENTORY",     Command.INVENTORY);
         commandMap.put("QUIT",          Command.QUIT);
+        commandMap.put("SKIP",          Command.SKIP);
 
         ignoredKeywords = new ArrayList<String>();
         ignoredKeywords.add("THE");

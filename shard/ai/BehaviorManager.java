@@ -63,21 +63,81 @@ public class BehaviorManager {
         return new Event(Command.ERROR, g, new ShardObject("null"));
     }
 
-    public static Event murdererAction(Guest g) {
+    /** 
+     * Try to kill someone, if holding a weapon. If unable, use a guestAction().
+     */
+    public static Event murdererAction(Guest murderer) {
 
-        ArrayList<ShardObject> candidates = Command.KILL.buildCandidateList(g);
+        ArrayList<ShardObject> victims =
+            Command.KILL.buildCandidateList(murderer);
 
-        // if alone in the room with a person
-        if (!inRoomWithPlayer(g) && candidates.size() == 1) {
-            return new Event(Command.KILL, g, candidates.get(0));
+        ArrayList<ShardObject> inventory =
+            Command.INVENTORY.buildCandidateList(murderer);
+
+        System.out.println(victims);
+
+        // if alone in the room with one person
+        if (!inRoomWithPlayer(murderer) && victims.size() == 1) {
+
+            Guest victim = (Guest) victims.get(0);
+
+            // if holding a weapon
+            System.out.println(inventory);
+            for (ShardObject object : inventory) {
+                Item item = (Item) object;
+                if (item.getWeapon()) {
+                    return new Event(Command.KILL, item, victim);
+                }
+            }
         }
 
-        else {
-            return guestAction(g);
+        Random rand = new Random();
+
+        // is there something to interact with?
+        ArrayList<ShardObject> candidates =
+            Command.USE.buildCandidateList(murderer);
+
+        if (candidates.size() > 0 && fiftyFifty() == true) {
+            int randomIndex = rand.nextInt(candidates.size());
+            ShardObject entry = candidates.get(randomIndex);
+            return new Event(Command.USE, murderer, entry);
         }
 
+        // is there something movable in the room?
+        candidates = Command.TAKE.buildCandidateList(murderer);
+
+        if (candidates.size() > 0 && fiftyFifty() == true) {
+            int randomIndex = rand.nextInt(candidates.size());
+            ShardObject entry = candidates.get(randomIndex);
+            return new Event(Command.TAKE, murderer, entry);
+        }
+
+        // is there something movable in the room that isnt a weapon
+        candidates = Command.DROP.buildCandidateList(murderer);
+
+        if (candidates.size() > 0 && fiftyFifty() == true) {
+            int randomIndex = rand.nextInt(candidates.size());
+            Item entry = (Item) candidates.get(randomIndex);
+
+            if (!entry.getWeapon()) {
+                return new Event(Command.DROP, murderer, entry);
+            }
+        }
+
+        // can I go to another room?
+        candidates = Command.ENTER.buildCandidateList(murderer);
+
+        if (candidates.size() > 0 && fiftyFifty() == true) {
+            int randomIndex = rand.nextInt(candidates.size());
+            ShardObject entry = candidates.get(randomIndex);
+            return new Event(Command.ENTER, murderer, entry);
+        }
+
+        // do nothing
+        return new Event(Command.ERROR, murderer, new ShardObject("null"));
     }
 
+    /** Is this guest in a room with the Player? */
     private static boolean inRoomWithPlayer(Guest g) {
 
         ArrayList<ShardObject> objects = g.getLocation().getObjects();
@@ -87,6 +147,19 @@ public class BehaviorManager {
         }
 
         return false;
+    }
+
+    /** Is this guest by himself in his location? */
+    private static boolean alone(Guest g) {
+
+        ArrayList<ShardObject> objects = g.getLocation().getObjects();
+
+        for (ShardObject o : objects) {
+            if (o instanceof Player || o instanceof Guest) { return false; }
+        }
+
+        return true;
+
     }
 
 

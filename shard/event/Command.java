@@ -231,7 +231,6 @@ public enum Command {
             Owner location = item.getLocation();
             String description = "Here lies " + guest.getName() + ", dead.";
 
-
             guest.setDead(true);
             Item deadGuest = new Item(guest.getName(), description, location);
             guest.setLocation(new Room());
@@ -326,6 +325,12 @@ public enum Command {
     /** Print out the objects held by this person. */
     INVENTORY {
 
+        @Override
+        public ArrayList<ShardObject> buildCandidateList(ShardObject target) {
+            Owner owner = (Owner) target;
+            return owner.getObjects();
+        }
+
         /** Print out the executor's inventory. */
         @Override
         public void execute(ShardObject executor, ShardObject item) {
@@ -350,6 +355,13 @@ public enum Command {
         public void execute(ShardObject executor, ShardObject item) {
             System.exit(0);
         }
+    },
+
+    SKIP {
+
+        @Override
+        public boolean consumesAction() { return true; }
+
     },
 
     ERROR {
