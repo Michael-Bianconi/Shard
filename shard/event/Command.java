@@ -45,10 +45,6 @@ public enum Command {
             }
         }
 
-        /** Guests will remember this. */
-        @Override
-        public boolean remember() { return true; }
-
         @Override
         public String pastTense() { return "entered"; }
     },
@@ -92,22 +88,29 @@ public enum Command {
                 ArrayList<ShardObject> unfilteredObjects = room.getObjects();
                 ArrayList<ShardObject> objects = new ArrayList<ShardObject>();
 
+                // remove the player from the list
                 for (ShardObject o : unfilteredObjects) {
                     if (!(o instanceof Player)) {
                         objects.add(o);
                     }
                 }
 
+                // only one object in the room
                 if (objects.size() == 1) {
                     description += " " + objects.get(0) + " is here.";
                 }
 
+                // there are several objects in the room
                 else if (objects.size() > 1) {
                     description += " There's ";
 
                     for (int i = 0; i < objects.size(); i++) {
+
+                        // it's the last object
                         if (i == objects.size() - 1) {
-                            description += "and " + objects.get(i).getName() + ".";
+                            description += "and "
+                                        + objects.get(i).getName()
+                                        + ".";
                         }
 
                         else {
@@ -115,11 +118,34 @@ public enum Command {
                         }
                     }
                 }
+
+                // add connected rooms
+                ArrayList<Room> connected = room.getConnectedRooms();
+
+                // only one connected room
+                if (connected.size() == 1) {
+                    description += " Connected to " + connected.get(0) + ".";
+                }
+
+                else if (connected.size() > 1) {
+                    description += " Connected to ";
+
+                    for (int i = 0; i < connected.size(); i++) {
+
+                        // it's the last object
+                        if (i == connected.size() - 1) {
+
+                            description += connected.get(i).getName() + ".";
+                        }
+
+                        else {
+                            description += connected.get(i).getName() + ", ";
+                        }
+                    }
+                }
             }
-
-
-
-
+            
+            // print the description
             System.out.println(
                 OutputManager.format(OutputType.DESCRIPTION, description)
             );
@@ -166,9 +192,6 @@ public enum Command {
         }
 
         @Override
-        public boolean remember() { return true; }
-
-        @Override
         public String pastTense() { return "took"; }
     },
 
@@ -201,12 +224,11 @@ public enum Command {
         }
 
         @Override
-        public boolean remember() { return true; }
-
-        @Override
         public String pastTense() { return "dropped"; }
 
     },
+
+
 
     /** Interact with an object. */
     USE {
@@ -243,9 +265,6 @@ public enum Command {
         }
 
         @Override
-        public boolean remember() { return true; }
-
-        @Override
         public String pastTense() { return "used"; }
 
     },
@@ -253,7 +272,7 @@ public enum Command {
     /** Kill a guest. */
     KILL {
 
-        /** Build a list of all people in the room excluding the target. */
+        /** Build a list of all guests in the room excluding the target. */
         @Override
         public ArrayList<ShardObject> buildCandidateList(ShardObject target) {
 
@@ -267,7 +286,7 @@ public enum Command {
         @Override
         public int getNumArguments() { return 1; }
 
-        // put the guest in his own little room and replace them with a body
+        /** Put the guest in his own room and replace them with a body. */
         @Override
         public void execute(ShardObject executor, ShardObject item) {
 
@@ -282,11 +301,10 @@ public enum Command {
         }
 
         @Override
-        public boolean remember() { return true; }
-
-        @Override
         public String pastTense() { return "killed"; }
     },
+
+
 
     /** Print out the Items in the room. */
     INVESTIGATE {
@@ -310,7 +328,8 @@ public enum Command {
     }, 
 
 
-    /** Accuse a Guest of being the murderer. */
+
+    /** Accuse a Guest of being the murderer. Ends the game (win or lose). */
     ACCUSE {
 
         /** Get list of all the people in the room. */
@@ -343,6 +362,8 @@ public enum Command {
 
     },
 
+
+
     /** Print out who this is. */
     WHOAMI {
 
@@ -359,6 +380,8 @@ public enum Command {
         @Override
         public boolean consumesAction() { return false; }
     },
+
+
 
     /** Print out where this is. */
     WHEREAMI {
@@ -378,9 +401,12 @@ public enum Command {
         public boolean consumesAction() { return false; }
     },
 
+
+
     /** Print out the objects held by this person. */
     INVENTORY {
 
+        /** List of all the objects held by the target. */
         @Override
         public ArrayList<ShardObject> buildCandidateList(ShardObject target) {
             Owner owner = (Owner) target;
@@ -405,26 +431,31 @@ public enum Command {
         public boolean consumesAction() { return false; }
     },
 
+
+
     /** Quit the game. */
     QUIT {
+
+        /** Exit the game. */
         @Override
         public void execute(ShardObject executor, ShardObject item) {
             System.exit(0);
         }
     },
 
-    SKIP {
 
-        @Override
-        public boolean consumesAction() { return true; }
 
-    },
+    SKIP,
+
+
 
     ERROR {
 
         @Override
         public boolean consumesAction() { return false; }
     };
+
+
 
     /**
      * Given a player, create an ArrayList of all possible candidates that
@@ -476,14 +507,6 @@ public enum Command {
 
         return filteredList;
     }
-
-
-    /**
-     * Boolean flag for if guests should remember these events happening.
-     * By default, false.
-     */
-    public boolean remember() { return false; }
-
 
     /**
      * The past tense of the command. By default, the lowercase name.
