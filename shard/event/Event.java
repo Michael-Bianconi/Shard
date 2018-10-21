@@ -19,10 +19,21 @@ public class Event {
 
     // constructors ============================================================
 
+    /**
+     * Command and executor constructor. Argument is left null.
+     * @param command Command to set.
+     * @param executor ShardObject initiating this Event.
+     */
     public Event(Command command, ShardObject executor) {
         this(command, executor, null);
     }
 
+    /**
+     * Standard constructor.
+     * @param command Command to execute.
+     * @param executor ShardObject initiating this Event.
+     * @param argument ShardObject being acted up.
+     */
     public Event(Command command, ShardObject executor, ShardObject argument) {
         
         this.executor = executor;
@@ -40,9 +51,18 @@ public class Event {
 
     // override methods ========================================================
 
+    /**
+     * Hashes the Event.
+     * @return Returns a hash of the command, executor, and argument.
+     */
     @Override
     public int hashCode() { return Objects.hash(command, argument, executor); }
 
+    /**
+     * Check for equality by comparing the command, executor, and argument.
+     * @param other Other object to compare.
+     * @return True if equal.
+     */
     @Override
     public boolean equals(Object other) {
 
@@ -54,6 +74,10 @@ public class Event {
             && this.executor.equals(e.executor);
     }
 
+    /**
+     * Gets the string representation of this object.
+     * @return The formatted version of this event.
+     */
     @Override
     public String toString() {
 
