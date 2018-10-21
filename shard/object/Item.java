@@ -1,11 +1,12 @@
 /**
- * Shard
- *
  * Every object in Shard is an Item (not to be confused with Java's Object).
  *
  * Some items can be interacted with. This creates an Event. Items can daisy
  * chain uses. If an item is used without that usage being initialized,
  * an Error Event will be used.
+ *
+ * @author Michael-Bianconi
+ * @author https://www.github.com/Michael-Bianconi
  */
 
 package shard.object;
