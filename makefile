@@ -10,7 +10,7 @@ EXT := .java
 # documentation generator
 JAVADOC := javadoc -d docs -subpackages shard -html5
 
-# test jde path
+# executable
 ENTRY := Shard
 
 # remove all class files

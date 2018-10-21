@@ -178,6 +178,7 @@ public class InputManager {
      * throw an InvalidInputException.
      * @param arg Argument to match.
      * @param list List of possible candidates.
+     * @param command Command being used (for InvalidInputException)
      * @return The matched candidate.
      * @exception InvalidInputException if no match is found.
      */
