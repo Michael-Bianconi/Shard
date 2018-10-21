@@ -1,17 +1,9 @@
 /**
- * Shard
+ * Guests mill around the mansion getting killed by the murderer (who is also
+ * a Guest).
+ *
  * @author Michael Bianconi
- *
- * Each Guest has an inventory that holds ShardObjects. Yes, that means
- * James can hold the kitchen in his pocket, but he probably shouldn't.
- *
- * When calling equals(), inventory isn't taken into account for reasons
- * outlined in the method documentation. That means don't differentiate
- * two Guests by giving one an apple and the other an orange.
- *
- * In fact, if you factor in user input, make sure to always give your Guests
- * unique names. The player can't distinguish between David Smith and David
- * Smith when he tells you "talk to David Smith".
+ * @author https://www.github.com/Michael-Bianconi
  */
 
 package shard.object;
@@ -29,14 +21,30 @@ public class Guest extends ShardObject implements Owner {
 
     // CONSTRUCTOR =============================================================
 
+    /**
+     * Name-only constructor. Calls this(name, name, null).
+     * @param name Name of the object.
+     */
     public Guest(String name) {
         this(name, name, null);
     }
 
+
+    /**
+     * Name and description constructor. Constructs with null location.
+     * @param name Name of this object.
+     * @param description Description of this object.
+     */
     public Guest(String name, String description) {
         this(name, description, null);
     }
 
+
+    /**
+     * Name and location constructor. Constructs with description set to name.
+     * @param name Name of the object.
+     * @param location Location of the object.
+     */
     public Guest(String name, Owner location) {
         this(name, name, location);
     }
