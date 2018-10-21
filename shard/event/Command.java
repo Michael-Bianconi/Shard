@@ -453,6 +453,26 @@ public enum Command {
 
         @Override
         public boolean consumesAction() { return false; }
+    },
+
+    HELP {
+
+        @Override
+        public void execute(ShardObject target, ShardObject object) {
+
+            for (Command c : Command.values()) {
+
+                if (c != ERROR && c != KILL) {
+                    System.out.println(
+                        OutputManager.format(OutputType.LIST_ITEM,
+                                             c.name().toLowerCase())
+                    );
+                }
+            }
+        }
+
+        @Override
+        public boolean consumesAction() { return false; }
     };
 
 

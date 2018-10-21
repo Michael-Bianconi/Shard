@@ -11,12 +11,7 @@ EXT := .java
 JAVADOC := javadoc -d docs -subpackages shard -html5
 
 # test jde path
-ENTRY := shard/test/
-
-# test jvm path
-EXE := shard.test.
-
-TEST := TEST_NOT_SPECIFIED
+ENTRY := Shard
 
 # remove all class files
 CLEAN_COMMAND := find . -name "*.class" -type f -delete
@@ -27,10 +22,10 @@ all:
 	$(MAKE) run --no-print-directory
 
 compile:
-	${JDE} ${ENTRY}${TEST}${EXT}
+	${JDE} ${ENTRY}${EXT}
 
 run:
-	${JVM} ${EXE}${TEST}
+	${JVM} ${ENTRY}
 
 clean:
 	${CLEAN_COMMAND}

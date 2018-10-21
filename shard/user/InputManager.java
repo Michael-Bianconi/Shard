@@ -62,6 +62,7 @@ public class InputManager {
         commandMap.put("QUIT",          Command.QUIT);
         commandMap.put("SKIP",          Command.SKIP);
         commandMap.put("ACCUSE",        Command.ACCUSE);
+        commandMap.put("HELP",          Command.HELP);
 
         ignoredKeywords = new ArrayList<String>();
         ignoredKeywords.add("THE");
@@ -124,7 +125,7 @@ public class InputManager {
 
         else {
             candidateList = command.buildCandidateList(player);
-            ShardObject object = matchArgument(input, candidateList);
+            ShardObject object = matchArgument(input, candidateList, command);
             return new Event(command, player, object);
         }
     }
@@ -181,7 +182,8 @@ public class InputManager {
      * @exception InvalidInputException if no match is found.
      */
     private static ShardObject matchArgument(String arg,
-                                             ArrayList<ShardObject> list)
+                                             ArrayList<ShardObject> list,
+                                             Command command)
                                              throws InvalidInputException {
         ShardObject matchObject = null;
         int matchRating = 0;
@@ -212,7 +214,9 @@ public class InputManager {
         }
 
         if (matchObject == null) {
-            throw new InvalidInputException("Cannot : " + arg);
+            throw new InvalidInputException("Cannot "
+                                          + command.name().toLowerCase()
+                                          + ": " + arg);
         }
 
         else if (ambiguous) {
