@@ -1,6 +1,8 @@
 /**
- * Shard
+ * Interface that allows implementers to hold other ShardObjects.
+ *
  * @author Michael Bianconi
+ * @author https://www.github.com/Michael-Bianconi
  */
 
 package shard.object;
