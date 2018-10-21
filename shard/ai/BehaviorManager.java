@@ -16,8 +16,16 @@ public class BehaviorManager {
 
     private BehaviorManager() {   }
 
+    /**
+     * Gets true or false, 50/50 chance.
+     * @return True 50% of the time.
+     */
     private static boolean fiftyFifty() { return Math.random() < 0.5; }
 
+
+    /**
+     * Choose the guests action.
+     */
     public static Event guestAction(Guest g) {
 
         Random rand = new Random();

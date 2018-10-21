@@ -4,15 +4,12 @@ import shard.user.*;
 import java.util.ArrayList;
 import java.util.Random;
 /**
+ * List of different Commands that the player can use.
  * @author Michael Bianconi
  * @author https://www.github.com/Michael-Bianconi
  * @version 2
- *
- * List of different Commands that the player can use.
  */
 public enum Command {
-
-
 
     /** Enter another room (does not have to be connected). */
     ENTER {
