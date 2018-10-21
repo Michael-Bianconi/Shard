@@ -1,3 +1,0 @@
-todo
-
-    Fix the describe command so Rooms are correctly described
