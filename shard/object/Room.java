@@ -1,7 +1,4 @@
 /**
- * Shard
- * @author Michael Bianconi
- *
  * The world is comprised of several Rooms. Each room has a name, description,
  * and collection of ShardObjects. They also have a list of connected Rooms.
  * A room's location always points to itself.
@@ -20,6 +17,10 @@ public class Room extends ShardObject implements Owner {
 
     // CONSTRUCTORS ============================================================
     
+    /**
+     * Name-only constructor, constructs with description set to name.
+     * @param name Name of the room.
+     */
     public Room(String name) {
         this(name, name);
     }
@@ -45,12 +46,43 @@ public class Room extends ShardObject implements Owner {
     }
 
     // ACCESSORS ===============================================================
+
+    /**
+     * Gets all ShardObjects in this room.
+     * @return ArrayList of ShardObjects in this room.
+     */
     public ArrayList<ShardObject> getObjects() { return this.objects; }
+
+    /**
+     * Gets all rooms connected to this one.
+     * @return ArrayList of all connected rooms.
+     */
     public ArrayList<Room> getConnectedRooms() { return this.connectedRooms; }
     
+    /**
+     * Adds the object to this room.
+     * @param o Object to add.
+     */
     public void addObject(ShardObject o) { objects.add(o); }
+
+    /**
+     * Removes the object from this room.
+     * @param o Object to remove.
+     */
     public void removeObject(ShardObject o) { objects.remove(o); }
+
+    /**
+     * Checks if an object is in this room.
+     * @param o Object to check.
+     * @return True if this room contains this object.
+     */
     public boolean hasObject(ShardObject o) { return objects.contains(o); }
+
+    /**
+     * Connect another room to this one.
+     * @param r Room to connect.
+     * @see Room.connectRooms()
+     */
     public void connectRoom(Room r) { connectedRooms.add(r); }
 
     /**
@@ -60,6 +92,9 @@ public class Room extends ShardObject implements Owner {
      * Using connectRoom(Room) makes a unidirectional connection (useful for
      * secret passages), although calling connectRoom() on both r1 and r2
      * achieves the same effect as this method.
+     * @param r1 First room
+     * @param r2 Second room
+     * @see Room.connectRoom()
      */
     public static void connectRooms(Room r1, Room r2) {
         r1.connectRoom(r2);
