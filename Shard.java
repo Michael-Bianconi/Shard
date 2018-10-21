@@ -209,6 +209,11 @@ public class Shard {
         System.out.println("\n\nShard\n\nTry to find the murderer before they"
                          + " kill everyone!\n\n");
 
+        System.out.println("type \"help\" for help\n\n");
+
+        System.out.println("Your location: " + lounge.getName());
+        Command.DESCRIBE.execute(player, lounge);
+
         // main loop
         while(true) {
 
